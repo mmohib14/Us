@@ -1,0 +1,6 @@
+{
+  "name": "ApexGutters - Premier Gutter & Roofline Solutions",
+  "description": "Comprehensive full-stack web application for ApexGutters featuring seamless gutters, downspout systems, leaf protection, project showcase, instant cost calculator, and inspection booking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
