@@ -1,0 +1,422 @@
+{
+  "name": "Appointment Booking Workflow",
+  "nodes": [
+    {
+      "id": "webhook-appointment-booking",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 100],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "appointment-booking",
+        "responseMode": "onReceived",
+        "authentication": "none",
+        "options": {
+          "responseHeaders": {
+            "Content-Type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "validate-request",
+      "name": "Validate Request",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [320, 100],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.full_name && $json.email && $json.phone && $json.service_type && $json.zip_code && $json.service_address && $json.preferred_date && $json.preferred_time && $json.privacy_consent }}",
+              "operation": "isTrue"
+            }
+          ]
+        },
+        "combineOperation": "and"
+      }
+    },
+    {
+      "id": "invalid-response",
+      "name": "Respond to Website - Invalid",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [600, 0],
+      "parameters": {
+        "responseBody": "={{ { success: false, message: 'Missing required booking fields. Please complete all required form fields and agree to the privacy notice.', status: 'invalid_request' } }}",
+        "statusCode": 400,
+        "respondWith": "json"
+      }
+    },
+    {
+      "id": "edit-fields",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [560, 180],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "name": "service_type", "value": "={{ $json.service_type }}" },
+            { "name": "service_slug", "value": "={{ $json.service_type.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '') }}" },
+            { "name": "full_name", "value": "={{ $json.full_name.trim() }}" },
+            { "name": "email", "value": "={{ $json.email.trim().toLowerCase() }}" },
+            { "name": "phone", "value": "={{ $json.phone }}" },
+            { "name": "zip_code", "value": "={{ String($json.zip_code).trim() }}" },
+            { "name": "service_address", "value": "={{ $json.service_address.trim() }}" },
+            { "name": "preferred_date", "value": "={{ $json.preferred_date }}" },
+            { "name": "preferred_time", "value": "={{ $json.preferred_time }}" },
+            { "name": "preferred_contact_method", "value": "={{ $json.preferred_contact_method || 'email' }}" },
+            { "name": "description", "value": "={{ $json.description || '' }}" },
+            { "name": "access_instructions", "value": "={{ $json.access_instructions || '' }}" },
+            { "name": "alternative_date_time", "value": "={{ $json.alternative_date_time || '' }}" },
+            { "name": "timezone_name", "value": "={{ $json.timezone_name || 'America/New_York' }}" },
+            { "name": "business_buffer_minutes", "value": 30 },
+            { "name": "appointment_start", "value": "={{ new Date($json.preferred_date + 'T' + $json.preferred_time).toISOString() }}" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "find-customer",
+      "name": "MySQL: Find Customer",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [820, 180],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, full_name, email, phone FROM customers WHERE email = {{ $json.email }} LIMIT 1;"
+      }
+    },
+    {
+      "id": "customer-exists-if",
+      "name": "IF: Customer Exists?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1040, 180],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json && $json.id }}", "operation": "isTrue" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "create-customer",
+      "name": "Create Customer if Needed",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [1280, 80],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO customers (full_name, email, phone, preferred_contact_method, created_at) VALUES ({{ $json.full_name }}, {{ $json.email }}, {{ $json.phone }}, {{ $json.preferred_contact_method }}, NOW()) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id), phone = VALUES(phone), full_name = VALUES(full_name); SELECT LAST_INSERT_ID() AS customer_id;"
+      }
+    },
+    {
+      "id": "service-area-check",
+      "name": "MySQL: Check Service Area",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [1520, 180],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id AS service_area_id, zip_code, city, state_code FROM service_areas WHERE zip_code = {{ $json.zip_code }} AND is_active = 1 LIMIT 1;"
+      }
+    },
+    {
+      "id": "service-area-if",
+      "name": "IF: Service Area Supported?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1750, 180],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json && $json.service_area_id }}", "operation": "isTrue" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "zip-unsupported-response",
+      "name": "Respond to Website - ZIP Unsupported",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2020, 0],
+      "parameters": {
+        "responseBody": "={{ { success: false, message: 'We do not currently provide service in your ZIP code. Please contact the office for alternative scheduling options.', status: 'unsupported_zip' } }}",
+        "statusCode": 422,
+        "respondWith": "json"
+      }
+    },
+    {
+      "id": "availability-check",
+      "name": "MySQL: Check Availability",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [2020, 180],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT CASE WHEN EXISTS ( SELECT 1 FROM appointments a JOIN service_catalog sc ON sc.id = a.service_id WHERE a.status IN ('pending', 'confirmed', 'reschedule_requested') AND a.service_area_id = {{ $json.service_area_id }} AND a.appointment_start < TIMESTAMPADD(MINUTE, sc.duration_minutes, {{ $json.appointment_start }}) AND a.appointment_end > {{ $json.appointment_start }} ) THEN 0 ELSE 1 END AS slot_available, (SELECT duration_minutes FROM service_catalog WHERE service_slug = {{ $json.service_slug }} LIMIT 1) AS service_duration_minutes;"
+      }
+    },
+    {
+      "id": "slot-if",
+      "name": "IF: Slot Available?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2270, 180],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json && $json.slot_available === 1 }}", "operation": "isTrue" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "unavailable-response",
+      "name": "Respond to Website - Slot Unavailable",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2510, 0],
+      "parameters": {
+        "responseBody": "={{ { success: false, message: 'The selected appointment time is no longer available. Please choose a different time or use the alternate date/time option.', status: 'slot_unavailable' } }}",
+        "statusCode": 409,
+        "respondWith": "json"
+      }
+    },
+    {
+      "id": "reserve-slot",
+      "name": "Reserve Appointment Safely",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [2510, 180],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "START TRANSACTION; SELECT id AS customer_id FROM customers WHERE email = {{ $json.email }} FOR UPDATE; INSERT INTO appointment_slots (appointment_id, slot_start, slot_end, status, reserved_at) VALUES (0, {{ $json.appointment_start }}, DATE_ADD({{ $json.appointment_start }}, INTERVAL {{ $json.service_duration_minutes }} MINUTE), 'reserved', NOW()); COMMIT;"
+      }
+    },
+    {
+      "id": "save-appointment",
+      "name": "MySQL: Save Appointment",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [2770, 180],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO appointments (appointment_ref, customer_id, service_id, service_area_id, zip_code, service_address, appointment_start, appointment_end, preferred_contact_method, description, access_instructions, alt_date_time, consent_privacy, status, created_at) VALUES (CONCAT('GTR-', DATE_FORMAT(NOW(), '%Y%m%d'), '-', LPAD(FLOOR(RAND() * 100000), 5, '0')), (SELECT id FROM customers WHERE email = {{ $json.email }} LIMIT 1), (SELECT id FROM service_catalog WHERE service_slug = {{ $json.service_slug }} LIMIT 1), {{ $json.service_area_id }}, {{ $json.zip_code }}, {{ $json.service_address }}, {{ $json.appointment_start }}, DATE_ADD({{ $json.appointment_start }}, INTERVAL {{ $json.service_duration_minutes }} MINUTE), {{ $json.preferred_contact_method }}, {{ $json.description }}, {{ $json.access_instructions }}, {{ $json.alternative_date_time }}, {{ $json.privacy_consent }}, 'pending', NOW()); SELECT LAST_INSERT_ID() AS appointment_id;"
+      }
+    },
+    {
+      "id": "db-error-if",
+      "name": "IF: Database Error?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [3050, 180],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json && $json.appointment_id }}", "operation": "isTrue" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "db-error-response",
+      "name": "Respond to Website - Database Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [3300, 0],
+      "parameters": {
+        "responseBody": "={{ { success: false, message: 'We could not complete your booking because of a temporary database issue. Please try again in a few minutes.', status: 'database_error' } }}",
+        "statusCode": 500,
+        "respondWith": "json"
+      }
+    },
+    {
+      "id": "customer-confirmation",
+      "name": "Send Customer Confirmation",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [3300, 180],
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "{{ $env.SMTP_FROM_EMAIL }}",
+        "toEmail": "={{ $json.email }}",
+        "subject": "={{ 'Your gutter service request: ' + $json.appointment_ref }}",
+        "text": "={{ 'Hi ' + $json.full_name + ',\n\nYour appointment request has been received.\nReference: ' + $json.appointment_ref + '\nService: ' + $json.service_type + '\nDate / Time: ' + $json.preferred_date + ' at ' + $json.preferred_time + '\nAddress: ' + $json.service_address + '\nStatus: pending\n\nOur team will review and confirm your appointment.\n\nCustomer support\nABC Gutters & Roofing\n(555) 123-4567' }}"
+      }
+    },
+    {
+      "id": "notify-admin",
+      "name": "Notify Admin",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [3550, 180],
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "{{ $env.SMTP_FROM_EMAIL }}",
+        "toEmail": "{{ $env.ADMIN_EMAIL }}",
+        "subject": "={{ 'New appointment request ' + $json.appointment_ref }}",
+        "text": "={{ 'New appointment request received.\nReference: ' + $json.appointment_ref + '\nCustomer: ' + $json.full_name + '\nPhone: ' + $json.phone + '\nEmail: ' + $json.email + '\nService: ' + $json.service_type + '\nRequested time: ' + $json.preferred_date + ' at ' + $json.preferred_time + '\nStatus: pending\nAddress: ' + $json.service_address }}"
+      }
+    },
+    {
+      "id": "success-response",
+      "name": "Respond to Website",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [3810, 180],
+      "parameters": {
+        "responseBody": "={{ { success: true, message: 'Your appointment request has been received and is awaiting confirmation.', appointment_reference: $json.appointment_ref, status: 'pending' } }}",
+        "statusCode": 200,
+        "respondWith": "json"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Request": {
+      "main": [
+        [
+          { "node": "Edit Fields", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Respond to Website - Invalid", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          { "node": "MySQL: Find Customer", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "MySQL: Find Customer": {
+      "main": [
+        [
+          { "node": "IF: Customer Exists?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "IF: Customer Exists?": {
+      "main": [
+        [
+          { "node": "MySQL: Check Service Area", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Create Customer if Needed", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Create Customer if Needed": {
+      "main": [
+        [
+          { "node": "MySQL: Check Service Area", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "MySQL: Check Service Area": {
+      "main": [
+        [
+          { "node": "IF: Service Area Supported?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "IF: Service Area Supported?": {
+      "main": [
+        [
+          { "node": "MySQL: Check Availability", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Respond to Website - ZIP Unsupported", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "MySQL: Check Availability": {
+      "main": [
+        [
+          { "node": "IF: Slot Available?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "IF: Slot Available?": {
+      "main": [
+        [
+          { "node": "Reserve Appointment Safely", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Respond to Website - Slot Unavailable", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Reserve Appointment Safely": {
+      "main": [
+        [
+          { "node": "MySQL: Save Appointment", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "MySQL: Save Appointment": {
+      "main": [
+        [
+          { "node": "IF: Database Error?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "IF: Database Error?": {
+      "main": [
+        [
+          { "node": "Send Customer Confirmation", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Respond to Website - Database Error", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Send Customer Confirmation": {
+      "main": [
+        [
+          { "node": "Notify Admin", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Notify Admin": {
+      "main": [
+        [
+          { "node": "Respond to Website", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": false,
+    "callerPolicy": "workflowsFromSameOwner",
+    "timezone": "America/New_York"
+  },
+  "staticData": null,
+  "triggerCount": 1,
+  "versionId": "2d2e5380-4d3a-4a8d-9d7b-bff2caa7b5d6",
+  "tags": [
+    "appointments",
+    "gutters",
+    "booking",
+    "mysql",
+    "n8n"
+  ]
+}

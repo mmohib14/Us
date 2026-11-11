@@ -1,0 +1,156 @@
+{
+  "name": "Appointment Reminder Workflow",
+  "nodes": [
+    {
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [80, 120],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "value": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "find-upcoming-appointments",
+      "name": "Find Upcoming Confirmed Appointments",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [360, 120],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT a.id, a.appointment_ref, a.customer_id, a.status, a.appointment_start, a.appointment_end, c.email, c.full_name, c.preferred_contact_method, sc.service_name FROM appointments a JOIN customers c ON c.id = a.customer_id JOIN service_catalog sc ON sc.id = a.service_id WHERE a.status = 'confirmed' AND a.appointment_start BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 72 HOUR) ORDER BY a.appointment_start ASC;"
+      }
+    },
+    {
+      "id": "filter-reminder-eligible",
+      "name": "Identify Eligible Reminders",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [620, 120],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json && $json.id && $json.status === 'confirmed' }}", "operation": "isTrue" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "send-24h-reminder",
+      "name": "Send 24h Reminder",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [900, 80],
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "{{ $env.SMTP_FROM_EMAIL }}",
+        "toEmail": "={{ $json.email }}",
+        "subject": "={{ 'Reminder: upcoming gutter service on ' + $json.appointment_start }}",
+        "text": "={{ 'Hi ' + $json.full_name + ',\n\nThis is a reminder that your ' + $json.service_name + ' is scheduled for ' + $json.appointment_start + '.\nPlease reply if you need to reschedule or cancel.\n\nThank you,\nABC Gutters & Roofing' }}"
+      }
+    },
+    {
+      "id": "send-2h-reminder",
+      "name": "Send 2h Reminder",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [900, 220],
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "{{ $env.SMTP_FROM_EMAIL }}",
+        "toEmail": "={{ $json.email }}",
+        "subject": "={{ 'Final reminder: your appointment is in 2 hours' }}",
+        "text": "={{ 'Hi ' + $json.full_name + ',\n\nYour appointment is scheduled for ' + $json.appointment_start + ' and will begin in approximately 2 hours.\nPlease ensure access is available and confirm any instructions.' }}"
+      }
+    },
+    {
+      "id": "record-reminder-attempt",
+      "name": "Record Reminder Attempt",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [1180, 120],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO reminder_log (appointment_id, reminder_type, scheduled_for, sent_at, status, provider) VALUES ({{ $json.id }}, {{ $json.reminder_type }}, {{ $json.appointment_start }}, NOW(), 'sent', 'gmail');"
+      }
+    },
+    {
+      "id": "reminder-complete-response",
+      "name": "Complete Reminder Cycle",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1440, 120],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          { "node": "Find Upcoming Confirmed Appointments", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Find Upcoming Confirmed Appointments": {
+      "main": [
+        [
+          { "node": "Identify Eligible Reminders", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Identify Eligible Reminders": {
+      "main": [
+        [
+          { "node": "Send 24h Reminder", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Send 2h Reminder", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Send 24h Reminder": {
+      "main": [
+        [
+          { "node": "Record Reminder Attempt", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Send 2h Reminder": {
+      "main": [
+        [
+          { "node": "Record Reminder Attempt", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Record Reminder Attempt": {
+      "main": [
+        [
+          { "node": "Complete Reminder Cycle", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": false,
+    "callerPolicy": "workflowsFromSameOwner",
+    "timezone": "America/New_York"
+  },
+  "staticData": null,
+  "triggerCount": 1,
+  "versionId": "5229b795-c758-466f-b2f2-a21c17fb67d1",
+  "tags": [
+    "appointments",
+    "reminders",
+    "email",
+    "mysql"
+  ]
+}

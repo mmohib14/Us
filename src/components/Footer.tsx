@@ -282,9 +282,9 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="apex-footer__legal">
             <span>&copy; {new Date().getFullYear()} {COMPANY_INFO.name}. All rights reserved. Licensed &amp; Insured.</span>
             <nav aria-label="Legal links" className="apex-footer__legal-links">
-              <a href="#" onClick={(event) => event.preventDefault()} aria-label="Privacy Policy URL placeholder">Privacy Policy</a>
-              <a href="#" onClick={(event) => event.preventDefault()} aria-label="Terms URL placeholder">Terms</a>
-              <a href="#" onClick={(event) => event.preventDefault()} aria-label="Sitemap URL placeholder">Sitemap</a>
+              <a href="/contact" aria-label="Contact the gutter company">Contact</a>
+              <a href="/services" aria-label="View services">Services</a>
+              <a href="/sitemap.xml" aria-label="Sitemap">Sitemap</a>
             </nav>
           </div>
           <div className="apex-footer__bottom-actions">

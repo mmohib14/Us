@@ -1,0 +1,226 @@
+{
+  "name": "Appointment Cancellation Workflow",
+  "nodes": [
+    {
+      "id": "webhook-cancel",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [80, 120],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "appointment-cancel",
+        "responseMode": "onReceived",
+        "authentication": "bearer",
+        "options": {
+          "responseHeaders": {
+            "Content-Type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "validate-appointment-customer",
+      "name": "Validate Appointment and Customer",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [340, 120],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT a.id, a.appointment_ref, a.customer_id, a.status, a.appointment_start, c.email, c.full_name FROM appointments a JOIN customers c ON c.id = a.customer_id WHERE a.appointment_ref = {{ $json.appointment_ref }} AND c.email = {{ $json.customer_email }} LIMIT 1;"
+      }
+    },
+    {
+      "id": "cancellation-policy-if",
+      "name": "Check Cancellation Policy",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [600, 120],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json && $json.id && $json.status && !['cancelled','completed','no_show'].includes($json.status) }}", "operation": "isTrue" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cancel-invalid-response",
+      "name": "Respond to Website - Invalid Request",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [880, 0],
+      "parameters": {
+        "responseBody": "={{ { success: false, message: 'This appointment cannot be cancelled in its current state.', status: 'invalid_cancellation_request' } }}",
+        "statusCode": 400,
+        "respondWith": "json"
+      }
+    },
+    {
+      "id": "cancel-approval-check",
+      "name": "Require Additional Approval if Needed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [880, 180],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json && $json.status === 'confirmed' }}", "operation": "isTrue" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cancel-approval-response",
+      "name": "Respond to Website - Approval Needed",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1160, 0],
+      "parameters": {
+        "responseBody": "={{ { success: false, message: 'Cancellations within the required notice period require staff approval before they are processed.', status: 'approval_required' } }}",
+        "statusCode": 403,
+        "respondWith": "json"
+      }
+    },
+    {
+      "id": "cancel-appointment-db",
+      "name": "Update Appointment Status",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [1160, 180],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "START TRANSACTION; UPDATE appointments SET status = 'cancelled', cancelled_at = NOW(), cancellation_reason = {{ $json.cancellation_reason || 'Customer requested cancellation' }}, updated_at = NOW() WHERE id = {{ $json.id }} AND status NOT IN ('cancelled', 'completed', 'no_show'); INSERT INTO appointment_status_history (appointment_id, previous_status, new_status, changed_by, note) VALUES ({{ $json.id }}, {{ $json.status }}, 'cancelled', 'customer', {{ $json.cancellation_reason || 'Customer requested cancellation' }}); COMMIT;"
+      }
+    },
+    {
+      "id": "release-slot",
+      "name": "Release Reserved Time Slots Safely",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4,
+      "position": [1420, 180],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE appointment_slots SET status = 'released' WHERE appointment_id = {{ $json.id }} AND status = 'reserved';"
+      }
+    },
+    {
+      "id": "notify-customer-cancel",
+      "name": "Notify Customer",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [1680, 180],
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "{{ $env.SMTP_FROM_EMAIL }}",
+        "toEmail": "={{ $json.email }}",
+        "subject": "={{ 'Cancellation confirmed for ' + $json.appointment_ref }}",
+        "text": "={{ 'Hi ' + $json.full_name + ',\n\nYour appointment ' + $json.appointment_ref + ' has been cancelled.\nCancellation reason: ' + ($json.cancellation_reason || 'Customer requested cancellation') + '\n\nIf this was not you, contact the office immediately.' }}"
+      }
+    },
+    {
+      "id": "notify-admin-cancel",
+      "name": "Notify Admin",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [1940, 180],
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "{{ $env.SMTP_FROM_EMAIL }}",
+        "toEmail": "{{ $env.ADMIN_EMAIL }}",
+        "subject": "={{ 'Appointment cancelled ' + $json.appointment_ref }}",
+        "text": "={{ 'Appointment cancelled.\nReference: ' + $json.appointment_ref + '\nCustomer: ' + $json.full_name + '\nEmail: ' + $json.email + '\nReason: ' + ($json.cancellation_reason || 'Customer requested cancellation') + '\nStatus: cancelled' }}"
+      }
+    },
+    {
+      "id": "cancel-success-response",
+      "name": "Respond to Website",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2200, 180],
+      "parameters": {
+        "responseBody": "={{ { success: true, message: 'Your appointment has been cancelled successfully.', appointment_reference: $json.appointment_ref, status: 'cancelled' } }}",
+        "statusCode": 200,
+        "respondWith": "json"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          { "node": "Validate Appointment and Customer", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Validate Appointment and Customer": {
+      "main": [
+        [
+          { "node": "Check Cancellation Policy", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Check Cancellation Policy": {
+      "main": [
+        [
+          { "node": "Require Additional Approval if Needed", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Respond to Website - Invalid Request", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Require Additional Approval if Needed": {
+      "main": [
+        [
+          { "node": "Update Appointment Status", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Respond to Website - Approval Needed", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Update Appointment Status": {
+      "main": [
+        [
+          { "node": "Release Reserved Time Slots Safely", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Release Reserved Time Slots Safely": {
+      "main": [
+        [
+          { "node": "Notify Customer", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Notify Customer": {
+      "main": [
+        [
+          { "node": "Notify Admin", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Notify Admin": {
+      "main": [
+        [
+          { "node": "Respond to Website", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": false,
+    "callerPolicy": "workflowsFromSameOwner",
+    "timezone": "America/New_York"
+  },
+  "staticData": null,
+  "triggerCount": 1,
+  "versionId": "7598d1d2-4698-425a-98bf-bb9ad6f83732",
+  "tags": [
+    "appointments",
+    "cancellation",
+    "mysql"
+  ]
+}

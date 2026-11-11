@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useRef, useMemo } from 'react';
 import { LazyMotion, domAnimation, m } from 'motion/react';
 import { PageTab, ServiceItem, ProjectItem, TeamMember, BlogPost } from './types';
 import {
@@ -343,6 +343,35 @@ export default function App() {
     }, 4500);
   };
 
+  const getPathForTab = (tab: PageTab, serviceOverride?: ServiceItem, projectOverride?: ProjectItem, blogOverride?: BlogPost) => {
+    const pathname = window.location.pathname || '/';
+    const service = serviceOverride ?? activeServicePage;
+    const project = projectOverride ?? activeProjectPage;
+    const blog = blogOverride ?? activeBlogPage;
+
+    if (tab === 'home') return '/';
+    if (tab === 'about') return '/about';
+    if (tab === 'services') return '/services';
+    if (tab === 'service-detail') return service ? `/${service.slug}` : '/services';
+    if (tab === 'why-us') return '/why-us';
+    if (tab === 'projects') return '/projects';
+    if (tab === 'project-detail') return project ? `/${project.id}` : '/projects';
+    if (tab === 'team') return '/team';
+    if (tab === 'calculator' || tab === 'cost-estimator') return '/cost-estimator';
+    if (tab === 'color-visualizer') return '/color-visualizer';
+    if (tab === 'drainage-calculator') return '/drainage-calculator';
+    if (tab === 'blog') return '/blog';
+    if (tab === 'blog-detail') return blog ? `/${blog.slug}` : '/blog';
+    if (tab === 'contact') return '/contact';
+    if (pathname !== '/' && pathname !== '/index.html') return pathname;
+    return '/';
+  };
+
+  const navigateToTab = (tab: PageTab, serviceOverride?: ServiceItem, projectOverride?: ProjectItem, blogOverride?: BlogPost) => {
+    const nextPath = getPathForTab(tab, serviceOverride, projectOverride, blogOverride);
+    window.history.pushState({}, '', nextPath);
+  };
+
   const handleOpenQuote = (servicePref?: string) => {
     setQuotePrefill({ service: servicePref });
     setQuoteError(null);
@@ -379,6 +408,7 @@ export default function App() {
   const handleOpenServicePage = (srv: ServiceItem) => {
     setActiveServicePage(srv);
     setCurrentTab('service-detail');
+    navigateToTab('service-detail', srv);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -386,6 +416,7 @@ export default function App() {
   const handleOpenProjectPage = (proj: ProjectItem) => {
     setActiveProjectPage(proj);
     setCurrentTab('project-detail');
+    navigateToTab('project-detail', undefined, proj);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -393,6 +424,7 @@ export default function App() {
   const handleOpenBlogPage = (post: BlogPost) => {
     setActiveBlogPage(post);
     setCurrentTab('blog-detail');
+    navigateToTab('blog-detail', undefined, undefined, post);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -403,6 +435,7 @@ export default function App() {
       handleOpenServicePage(found);
     } else {
       setCurrentTab('services');
+      navigateToTab('services');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -410,36 +443,199 @@ export default function App() {
   const handleSelectProjectCategory = (cat: 'all' | 'residential' | 'copper' | 'commercial' | 'protection') => {
     setActiveProjectFilter(cat);
     setCurrentTab('projects');
+    navigateToTab('projects');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   useEffect(() => {
+    const syncTabFromPath = () => {
+      const path = window.location.pathname;
+      if (path === '/about') {
+        setCurrentTab('about');
+        return;
+      }
+      if (path === '/services') {
+        setCurrentTab('services');
+        return;
+      }
+      if (path === '/why-us') {
+        setCurrentTab('why-us');
+        return;
+      }
+      if (path === '/projects') {
+        setCurrentTab('projects');
+        return;
+      }
+      if (path === '/team') {
+        setCurrentTab('team');
+        return;
+      }
+      if (path === '/cost-estimator' || path === '/calculator') {
+        setCurrentTab('cost-estimator');
+        return;
+      }
+      if (path === '/color-visualizer') {
+        setCurrentTab('color-visualizer');
+        return;
+      }
+      if (path === '/drainage-calculator') {
+        setCurrentTab('drainage-calculator');
+        return;
+      }
+      if (path === '/blog') {
+        setCurrentTab('blog');
+        return;
+      }
+      if (path === '/contact') {
+        setCurrentTab('contact');
+        return;
+      }
+
+      const matchingService = SERVICES_DATA.find((service) => `/${service.slug}` === path);
+      if (matchingService) {
+        setActiveServicePage(matchingService);
+        setCurrentTab('service-detail');
+        return;
+      }
+
+      const matchingBlog = BLOG_POSTS.find((post) => `/${post.slug}` === path);
+      if (matchingBlog) {
+        setActiveBlogPage(matchingBlog);
+        setCurrentTab('blog-detail');
+        return;
+      }
+
+      setCurrentTab('home');
+    };
+
+    syncTabFromPath();
+    window.addEventListener('popstate', syncTabFromPath);
+    return () => window.removeEventListener('popstate', syncTabFromPath);
+  }, []);
+
+  useEffect(() => {
     const pages: Record<string, { title: string; description: string }> = {
       home: {
-        title: 'Gutter Installation & Roofline Solutions | ApexGutters',
-        description: 'Protect your home with custom seamless gutters, gutter guards, downspouts, and engineered drainage. Request a free ApexGutters estimate.',
+        title: 'Gutter Cleaning, Repair & Installation | ApexGutters',
+        description: 'Professional gutter cleaning, gutter repair, gutter installation, gutter guards, seamless gutters, and downspout services for homeowners and commercial properties.',
       },
-      about: { title: 'About ApexGutters | Gutter Specialists', description: 'Learn about ApexGutters, our gutter installation team, workmanship, and exterior water-management services.' },
-      services: { title: 'Gutter & Roofline Services | ApexGutters', description: 'Explore seamless gutter installation, repair, cleaning, gutter guards, fascia, soffit, and commercial drainage services.' },
+      about: { title: 'About ApexGutters | Gutter Specialists', description: 'Learn about our gutter specialists, exterior drainage expertise, and water management approach for residential and commercial properties.' },
+      services: { title: 'Gutter Services in the USA | ApexGutters', description: 'Explore gutter cleaning, installation, repair, replacement, gutter guards, and commercial gutter solutions designed for American homes and buildings.' },
       'service-detail': { title: `${activeServicePage.title} | ApexGutters`, description: activeServicePage.shortDesc },
-      'why-us': { title: 'Why Choose ApexGutters | Gutter Specialists', description: 'See how ApexGutters approaches gutter installation, drainage design, safety, and project estimates.' },
-      projects: { title: 'Gutter Installation Projects | ApexGutters', description: 'Browse completed residential, copper, commercial, and gutter-protection projects from ApexGutters.' },
+      'why-us': { title: 'Why Choose ApexGutters | Residential & Commercial Gutter Experts', description: 'See how ApexGutters approaches gutter installation, drainage design, safety, and project estimates for homes and commercial properties.' },
+      projects: { title: 'Gutter Installation Projects | ApexGutters', description: 'Browse recent residential and commercial gutter installation and protection work completed by ApexGutters.' },
       'project-detail': { title: `${activeProjectPage.title} | ApexGutters Projects`, description: activeProjectPage.shortDesc },
-      team: { title: 'Our Gutter Specialists | ApexGutters', description: 'Meet the ApexGutters installation and exterior drainage team.' },
-      calculator: { title: 'Gutter Project Cost Calculator | ApexGutters', description: 'Estimate gutter project costs based on roofline length, home height, materials, and protection options.' },
-      'cost-estimator': { title: 'Gutter Project Cost Calculator | ApexGutters', description: 'Estimate gutter project costs based on roofline length, home height, materials, and protection options.' },
-      'color-visualizer': { title: 'Gutter Colors & Finishes | ApexGutters', description: 'Compare gutter finishes and visualize colors with the ApexGutters roofline and exterior trim selector.' },
-      'drainage-calculator': { title: 'Rainwater & Gutter Sizing Calculator | ApexGutters', description: 'Estimate roof runoff and explore gutter and downspout sizing recommendations.' },
-      blog: { title: 'Gutter Care & Installation Advice | ApexGutters', description: 'Read gutter maintenance, installation, drainage, and storm-preparation guides from ApexGutters.' },
+      team: { title: 'Our Gutter Specialists | ApexGutters', description: 'Meet the ApexGutters team focused on gutter installation, repair, drainage, and water management.' },
+      calculator: { title: 'Gutter Cost Calculator | ApexGutters', description: 'Estimate gutter project costs based on linear footage, materials, stories, and leaf guard options.' },
+      'cost-estimator': { title: 'Gutter Cost Calculator | ApexGutters', description: 'Estimate gutter project costs based on linear footage, materials, stories, and leaf guard options.' },
+      'color-visualizer': { title: 'Gutter Colors & Finishes | ApexGutters', description: 'Compare gutter finishes and visualize colors for seamless aluminum, copper, and contemporary gutter systems.' },
+      'drainage-calculator': { title: 'Rainwater & Gutter Sizing Calculator | ApexGutters', description: 'Estimate roof runoff and gutter sizing recommendations for efficient drainage and downspout performance.' },
+      blog: { title: 'Gutter Care & Installation Advice | ApexGutters', description: 'Read practical guides on gutter maintenance, installation, repairs, and downspout care for U.S. homeowners and property managers.' },
       'blog-detail': { title: `${activeBlogPage.title} | ApexGutters Advice`, description: activeBlogPage.excerpt },
-      contact: { title: 'Contact ApexGutters | Request an Estimate', description: 'Contact ApexGutters to request a gutter installation estimate or schedule a roofline inspection.' },
+      contact: { title: 'Contact ApexGutters | Request an Estimate', description: 'Request a gutter estimate, book a free inspection, or call our team for residential or commercial gutter services.' },
     };
+
     const metadata = pages[currentTab] ?? pages.home;
+    const canonicalUrl = `${window.location.origin}${window.location.pathname || '/'}`;
+
     document.title = metadata.title;
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', metadata.description);
     document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute('content', metadata.title);
     document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', metadata.description);
+    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute('content', canonicalUrl);
+    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
   }, [currentTab, activeServicePage, activeProjectPage, activeBlogPage]);
+
+  const structuredData = useMemo(() => {
+    const websiteSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'ApexGutters',
+      url: window.location.origin || 'https://example.com',
+      description: 'Gutter cleaning, repair, installation, gutter guards, and seamless gutter services for homeowners and commercial properties in the United States.',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${window.location.origin || 'https://example.com'}?q={search_term_string}`,
+        'query-input': 'required name=search_term_string'
+      }
+    };
+
+    const localBusinessSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'LocalBusiness',
+      name: 'ApexGutters',
+      image: 'https://images.unsplash.com/photo-1628744876497-eb30460be9f6?auto=format&fit=crop&w=1000&q=80',
+      telephone: '18884887767',
+      email: 'info@apexgutters.com',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '1248 Skyline Blvd',
+        addressLocality: 'Metro City',
+        addressRegion: 'NY',
+        postalCode: '10001',
+        addressCountry: 'US'
+      },
+      areaServed: 'United States',
+      description: 'Gutter cleaning, gutter repair, seamless gutter installation, gutter guards, and commercial gutter solutions.',
+      url: window.location.origin || 'https://example.com',
+      openingHours: 'Mo-Sa 07:00-18:00',
+      priceRange: '$$'
+    };
+
+    const baseGraph = [websiteSchema, localBusinessSchema];
+
+    if (currentTab === 'service-detail') {
+      baseGraph.push({
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: activeServicePage.title,
+        serviceType: activeServicePage.title,
+        description: activeServicePage.shortDesc,
+        provider: {
+          '@type': 'LocalBusiness',
+          name: 'ApexGutters'
+        },
+        areaServed: 'United States',
+        offers: {
+          '@type': 'Offer',
+          availability: 'https://schema.org/InStock',
+          priceCurrency: 'USD',
+          description: 'Quote-based gutter service pricing. Final cost depends on project scope, material, and access.'
+        }
+      });
+
+      baseGraph.push({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${window.location.origin}/` },
+          { '@type': 'ListItem', position: 2, name: 'Services', item: `${window.location.origin}/services` },
+          { '@type': 'ListItem', position: 3, name: activeServicePage.title, item: `${window.location.origin}${window.location.pathname}` }
+        ]
+      });
+    }
+
+    return {
+      '@context': 'https://schema.org',
+      '@graph': baseGraph
+    };
+  }, [currentTab, activeServicePage]);
+
+  useEffect(() => {
+    const existingSchema = document.head.querySelector('script[data-schema="apexgutters"]');
+    if (existingSchema) existingSchema.remove();
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.setAttribute('data-schema', 'apexgutters');
+    script.text = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+
+    return () => {
+      const scriptNode = document.head.querySelector('script[data-schema="apexgutters"]');
+      if (scriptNode) scriptNode.remove();
+    };
+  }, [structuredData]);
 
   return (
     <div className="min-h-screen bg-white text-slate-800 flex flex-col font-['Manrope'] selection:bg-orange-500 selection:text-white">
@@ -449,6 +645,7 @@ export default function App() {
         currentTab={currentTab}
         onNavigate={(tab) => {
           setCurrentTab(tab);
+          navigateToTab(tab);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         onSelectServiceSlug={handleSelectServiceSlug}
