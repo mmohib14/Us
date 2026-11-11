@@ -654,7 +654,7 @@ export default function App() {
       />
 
       {/* 2. MAIN VIEW CONTENT ACROSS ALL 12 DEDICATED SEPARATE PAGES */}
-      <main id="main-content" tabIndex={-1} className="flex-grow">
+      <main id="main-content" tabIndex={-1} className="grow">
         <LazyMotion features={domAnimation}>
           <Suspense fallback={<div role="status" className="mx-auto max-w-7xl px-4 py-16 text-center text-sm text-slate-500">Loading page content…</div>}>
             <m.div
@@ -669,13 +669,13 @@ export default function App() {
         {currentTab === 'home' && (
           <div className="homepage-motion">
             {/* HERO SECTION */}
-            <section className="hero-motion relative overflow-hidden border-b border-slate-200 bg-[#f7f8f9] py-8 sm:py-10 lg:py-[18px]">
+            <section className="hero-motion relative overflow-hidden border-b border-slate-200 bg-[#f7f8f9] py-8 sm:py-10 lg:py-4.5">
               <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
                 <div className="hero-floating-orb absolute -left-16 top-12 h-52 w-52 rounded-full bg-[#F36B21]/25" />
                 <div className="hero-floating-orb absolute right-8 top-20 h-44 w-44 rounded-full bg-[#67c5ff]/20" style={{ animationDelay: '1.5s' }} />
                 <div className="hero-floating-orb absolute bottom-10 left-1/3 h-40 w-40 rounded-full bg-[#0ea5e9]/15" style={{ animationDelay: '3s' }} />
               </div>
-              <div className="relative z-10 mx-auto w-[93.3%] max-w-[1488px] md:w-[90%]">
+              <div className="relative z-10 mx-auto w-[93.3%] max-w-372 md:w-[90%]">
                 <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-8 xl:gap-12">
                   <div className="hero-motion-copy space-y-5">
                     <div className="hero-badge inline-flex items-center gap-2.5 text-xs font-extrabold uppercase tracking-[0.14em] text-[#F36B21] sm:text-sm">
@@ -683,11 +683,11 @@ export default function App() {
                       CERTIFIED GUTTER SPECIALISTS
                     </div>
 
-                    <h1 className="max-w-[790px] text-[clamp(2.625rem,4.1vw,4.25rem)] font-normal leading-[1.2] tracking-[-0.055em] text-[#171A1D]">
+                    <h1 className="max-w-197.5 text-[clamp(2.625rem,4.1vw,4.25rem)] font-normal leading-[1.2] tracking-[-0.055em] text-[#171A1D]">
                       Protecting Homes With Superior Gutter &amp; Downspout Solutions
                     </h1>
 
-                    <p className="max-w-[760px] text-base leading-relaxed text-slate-500 sm:text-lg lg:text-xl">
+                    <p className="max-w-190 text-base leading-relaxed text-slate-500 sm:text-lg lg:text-xl">
                       Precision installation, custom seamless gutters, and heavy-duty water drainage systems engineered to safeguard your home’s roofline and foundation.
                     </p>
 
@@ -738,7 +738,7 @@ export default function App() {
                       />
 
                       <div className="hero-stat-card absolute bottom-5 left-5 flex max-w-[min(345px,calc(100%-2.5rem))] items-center gap-5 rounded-2xl border border-slate-100 bg-white/95 px-5 py-5 shadow-xl backdrop-blur-sm sm:bottom-9 sm:left-9 sm:px-7 sm:py-6">
-                        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white shadow-sm">
+                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white shadow-sm">
                           <Award className="h-7 w-7 text-white" />
                         </div>
                         <div>
@@ -764,9 +764,9 @@ export default function App() {
                     <img
                       src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
                       alt="Home Gutter Installation"
-                      className="w-full rounded-2xl shadow-lg h-[380px] object-cover"
+                      className="w-full rounded-2xl shadow-lg h-95 object-cover"
                     />
-                    <div className="absolute bottom-4 right-4 bg-white p-4 rounded-xl shadow-xl border-l-4 border-[#F36B21] max-w-[230px] hidden sm:block">
+                    <div className="absolute bottom-4 right-4 bg-white p-4 rounded-xl shadow-xl border-l-4 border-[#F36B21] max-w-57.5 hidden sm:block">
                       <h3 className="text-2xl font-black text-slate-900 m-0">
                         <span data-count="15000">15,000</span>+
                       </h3>
@@ -855,9 +855,9 @@ export default function App() {
                       key={srv.id}
                       onClick={() => handleOpenServicePage(srv)}
                       aria-label={`View service: ${srv.title}`}
-                      className="media-card h-full w-full border-0 p-0 text-left bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group card-hover cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21]"
+                      className="media-card h-full w-full p-0 text-left bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group card-hover cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21]"
                     >
-                      <div className="relative aspect-[3/2] overflow-hidden bg-slate-100">
+                      <div className="relative aspect-3/2 overflow-hidden bg-slate-100">
                         <ResponsiveImage
                           src={srv.image}
                           alt={srv.title}
@@ -868,11 +868,11 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="p-5 flex flex-col flex-grow">
+                      <div className="p-5 flex flex-col grow">
                         <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#F36B21] transition-colors">
                           {srv.title}
                         </h3>
-                        <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-grow line-clamp-3">
+                        <p className="text-slate-600 text-sm leading-relaxed mb-4 grow line-clamp-3">
                           {srv.shortDesc}
                         </p>
                         <span className="min-h-11 text-sm font-bold text-[#A93D0B] hover:text-[#7F2E0A] inline-flex items-center gap-1.5 transition-colors cursor-pointer mt-auto">
@@ -919,7 +919,7 @@ export default function App() {
                       key={proj.id}
                       onClick={() => handleOpenProjectPage(proj)}
                       aria-label={`View project: ${proj.title}`}
-                      className="project-media-card group relative block aspect-[4/3] min-h-[220px] w-full overflow-hidden rounded-xl border-0 bg-slate-900 p-0 text-left cursor-pointer shadow-md hover:shadow-2xl transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21]"
+                      className="project-media-card group relative block aspect-4/3 min-h-55 w-full overflow-hidden rounded-xl bg-slate-900 p-0 text-left cursor-pointer shadow-md hover:shadow-2xl transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21]"
                     >
                       <ResponsiveImage
                         src={proj.image}
@@ -927,7 +927,7 @@ export default function App() {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 filter brightness-95"
                         sizes="(max-width: 599px) 100vw, (max-width: 1023px) 50vw, 33vw"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
                       <div className="absolute bottom-0 inset-x-0 p-5 text-white">
                         <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-400 text-slate-900 mb-2 inline-block">
                           {proj.badge}
@@ -950,7 +950,7 @@ export default function App() {
             </section>
 
             {/* GUTTER COLOR & FINISH VISUALIZER */}
-            <Suspense fallback={<div role="status" aria-label="Loading gutter color visualizer" className="mx-auto min-h-[56rem] max-w-7xl animate-pulse rounded-2xl bg-slate-100" />}>
+            <Suspense fallback={<div role="status" aria-label="Loading gutter color visualizer" className="mx-auto min-h-224 max-w-7xl animate-pulse rounded-2xl bg-slate-100" />}>
               <ColorVisualizer onSelectColorForQuote={handleColorQuoteRequest} />
             </Suspense>
 
@@ -975,7 +975,7 @@ export default function App() {
                       key={m.id}
                       className="h-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all text-center p-4 flex flex-col"
                     >
-                      <div className="aspect-[4/3] rounded-lg overflow-hidden mb-4 bg-slate-100">
+                      <div className="aspect-4/3 rounded-lg overflow-hidden mb-4 bg-slate-100">
                         <ResponsiveImage
                           src={m.image}
                           alt={m.name}
@@ -1069,7 +1069,7 @@ export default function App() {
                       key={post.id}
                       onClick={() => handleOpenBlogPage(post)}
                       aria-label={`Read article: ${post.title}`}
-                      className="w-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21]"
+                      className="w-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21]"
                     >
                       <div className="h-44 overflow-hidden relative">
                         <img
@@ -1081,14 +1081,14 @@ export default function App() {
                           {post.date}
                         </span>
                       </div>
-                      <div className="p-5 flex flex-col flex-grow">
+                      <div className="p-5 flex flex-col grow">
                         <span className="text-[11px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">
                           {post.category} • {post.readTime}
                         </span>
                         <h4 className="font-extrabold text-base text-slate-900 group-hover:text-[#F36B21] transition-colors mb-2 line-clamp-2">
                           {post.title}
                         </h4>
-                        <p className="text-xs text-slate-600 line-clamp-2 mb-4 flex-grow">
+                        <p className="text-xs text-slate-600 line-clamp-2 mb-4 grow">
                           {post.excerpt}
                         </p>
                         <span className="text-xs font-bold text-[#F36B21] inline-flex items-center gap-1 mt-auto">
@@ -1112,7 +1112,7 @@ export default function App() {
         {/* ========================================================================= */}
         {currentTab === 'about' && (
           <div>
-            <section className="bg-gradient-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
+            <section className="bg-linear-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
               <div className="max-w-4xl mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
                   About ApexGutters
@@ -1132,7 +1132,7 @@ export default function App() {
                     <img
                       src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80"
                       alt="Gutter Installation Technician"
-                      className="rounded-2xl shadow-xl w-full h-[400px] object-cover"
+                      className="rounded-2xl shadow-xl w-full h-100 object-cover"
                     />
                     <div className="absolute top-5 left-5 bg-[#F36B21] text-white p-3.5 rounded-xl shadow-xl text-center">
                       <div className="text-3xl font-black leading-none">20+</div>
@@ -1320,7 +1320,7 @@ export default function App() {
         {/* ========================================================================= */}
         {currentTab === 'services' && (
           <div>
-            <section className="bg-gradient-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
+            <section className="bg-linear-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
               <div className="max-w-4xl mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
                   Our Exterior Services
@@ -1366,7 +1366,7 @@ export default function App() {
         {/* ========================================================================= */}
         {currentTab === 'why-us' && (
           <div>
-            <section className="bg-gradient-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
+            <section className="bg-linear-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
               <div className="max-w-4xl mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
                   Why Homeowners Choose ApexGutters
@@ -1419,7 +1419,7 @@ export default function App() {
         {/* ========================================================================= */}
         {currentTab === 'projects' && (
           <div>
-            <section className="bg-gradient-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
+            <section className="bg-linear-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
               <div className="max-w-4xl mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
                   Work Portfolio &amp; Projects
@@ -1469,7 +1469,7 @@ export default function App() {
         {/* ========================================================================= */}
         {currentTab === 'team' && (
           <div>
-            <section className="bg-gradient-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
+            <section className="bg-linear-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
               <div className="max-w-4xl mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
                   Our Specialists &amp; Master Installers
@@ -1520,7 +1520,7 @@ export default function App() {
               </div>
 
               <div className="mt-14">
-                <Suspense fallback={<div role="status" aria-label="Loading gutter color visualizer" className="mx-auto min-h-[56rem] max-w-7xl animate-pulse rounded-2xl bg-slate-100" />}>
+                <Suspense fallback={<div role="status" aria-label="Loading gutter color visualizer" className="mx-auto min-h-224 max-w-7xl animate-pulse rounded-2xl bg-slate-100" />}>
                   <ColorVisualizer onSelectColorForQuote={handleColorQuoteRequest} />
                 </Suspense>
               </div>
@@ -1533,7 +1533,7 @@ export default function App() {
         {/* ========================================================================= */}
         {currentTab === 'color-visualizer' && (
           <div>
-            <section className="bg-gradient-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
+            <section className="bg-linear-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
               <div className="max-w-4xl mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
                   Gutter Colors &amp; Architectural Finishes
@@ -1545,7 +1545,7 @@ export default function App() {
                 </div>
               </div>
             </section>
-            <Suspense fallback={<div role="status" aria-label="Loading gutter color visualizer" className="mx-auto min-h-[56rem] max-w-7xl animate-pulse rounded-2xl bg-slate-100" />}>
+                <Suspense fallback={<div role="status" aria-label="Loading gutter color visualizer" className="mx-auto min-h-224 max-w-7xl animate-pulse rounded-2xl bg-slate-100" />}>
               <ColorVisualizer onSelectColorForQuote={handleColorQuoteRequest} />
             </Suspense>
           </div>
@@ -1556,7 +1556,7 @@ export default function App() {
         {/* ========================================================================= */}
         {currentTab === 'drainage-calculator' && (
           <div>
-            <section className="bg-gradient-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
+            <section className="bg-linear-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
               <div className="max-w-4xl mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
                   Rainwater Catchment &amp; Gutter Sizing Matrix
@@ -1583,7 +1583,7 @@ export default function App() {
         {/* ========================================================================= */}
         {currentTab === 'blog' && (
           <div>
-            <section className="bg-gradient-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
+            <section className="bg-linear-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
               <div className="max-w-4xl mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
                   Blog &amp; Gutter Care Advice
@@ -1630,7 +1630,7 @@ export default function App() {
         {/* ========================================================================= */}
         {currentTab === 'contact' && (
           <div>
-            <section className="bg-gradient-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
+            <section className="bg-linear-to-r from-[#171A1D] to-[#202326] text-white py-16 sm:py-20 text-center">
               <div className="max-w-4xl mx-auto px-4">
                 <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
                   Contact ApexGutters

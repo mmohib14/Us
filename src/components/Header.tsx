@@ -190,15 +190,15 @@ export const Header: React.FC<HeaderProps> = ({
       <div
         className={`mx-auto flex items-center justify-between px-4 transition-[height,width] duration-300 ease-in-out sm:px-6 lg:px-8 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] ${
           isScrolled
-            ? 'h-[76px] w-full max-w-none'
-            : 'h-[84px] w-[90%] max-w-[1709px]'
+            ? 'h-19 w-full max-w-none'
+            : 'h-21 w-[90%] max-w-[1709px]'
         }`}
       >
         {/* ================= 1. LEFT: ApexGutters Brand Logo ================= */}
         <button
           onClick={() => handleTabClick('home')}
           aria-current={currentTab === 'home' ? 'page' : undefined}
-          className="group flex shrink-0 items-center gap-2.5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F36B21] lg:justify-self-start"
+          className="group flex shrink-0 items-center gap-2.5 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F36B21] lg:justify-self-start"
           aria-label="ApexGutters Home"
         >
           <div
@@ -221,7 +221,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Home */}
           <button
             onClick={() => handleTabClick('home')}
-            className={`min-h-11 px-2 py-2 transition-colors cursor-pointer relative focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] ${
+            className={`min-h-11 px-2 py-2 transition-colors cursor-pointer relative focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] ${
               currentTab === 'home'
                 ? 'text-[#F36B21] font-extrabold'
                 : 'text-slate-700 hover:text-[#F36B21]'
@@ -249,7 +249,7 @@ export const Header: React.FC<HeaderProps> = ({
               aria-current={['about', 'why-us', 'team', 'contact', 'color-visualizer', 'drainage-calculator', 'blog', 'blog-detail'].includes(currentTab) ? 'page' : undefined}
               aria-expanded={pagesDropdownOpen}
               aria-haspopup="true"
-              className={`min-h-11 px-2 py-2 transition-colors cursor-pointer flex items-center gap-1.5 relative focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] ${
+              className={`min-h-11 px-2 py-2 transition-colors cursor-pointer flex items-center gap-1.5 relative focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] ${
                 currentTab === 'about' || currentTab === 'why-us' || currentTab === 'team' || currentTab === 'contact' || currentTab === 'color-visualizer' || currentTab === 'drainage-calculator'
                   ? 'text-[#F36B21] font-extrabold'
                   : 'text-slate-700 hover:text-[#F36B21]'
@@ -275,7 +275,7 @@ export const Header: React.FC<HeaderProps> = ({
                     type="button"
                     onClick={() => handleTabClick(item.tab)}
                     aria-current={currentTab === item.tab ? 'page' : undefined}
-                    className={`min-h-11 w-full text-left px-4 py-2.5 text-xs font-semibold flex items-center justify-between transition-colors cursor-pointer block focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#F36B21] ${
+                    className={`min-h-11 w-full text-left px-4 py-2.5 text-xs font-semibold flex items-center justify-between transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#F36B21] ${
                       currentTab === item.tab
                         ? 'bg-[#FFF3EB] text-[#F36B21]'
                         : 'text-slate-700 hover:bg-[#FFF3EB] hover:text-[#F36B21]'
@@ -305,7 +305,7 @@ export const Header: React.FC<HeaderProps> = ({
               aria-current={currentTab === 'services' || currentTab === 'service-detail' ? 'page' : undefined}
               aria-expanded={servicesDropdownOpen}
               aria-haspopup="true"
-              className={`min-h-11 px-2 py-2 transition-colors cursor-pointer flex items-center gap-1.5 relative focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] ${
+              className={`min-h-11 px-2 py-2 transition-colors cursor-pointer flex items-center gap-1.5 relative focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] ${
                 currentTab === 'services' || currentTab === 'service-detail'
                   ? 'text-[#F36B21] font-extrabold'
                   : 'text-slate-700 hover:text-[#F36B21]'
@@ -330,7 +330,7 @@ export const Header: React.FC<HeaderProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => item.slug ? handleServiceItemClick(item.slug) : handleTabClick('services')}
-                    className="min-h-11 w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-800 hover:bg-[#FFF3EB] hover:text-[#F36B21] transition-colors cursor-pointer block focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#F36B21]"
+                    className="min-h-11 w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-800 hover:bg-[#FFF3EB] hover:text-[#F36B21] transition-colors cursor-pointer block focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#F36B21]"
                   >
                     {item.label}
                   </button>
@@ -355,7 +355,7 @@ export const Header: React.FC<HeaderProps> = ({
               aria-current={currentTab === 'projects' || currentTab === 'project-detail' ? 'page' : undefined}
               aria-expanded={projectsDropdownOpen}
               aria-haspopup="true"
-              className={`min-h-11 px-2 py-2 transition-colors cursor-pointer flex items-center gap-1.5 relative focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] ${
+              className={`min-h-11 px-2 py-2 transition-colors cursor-pointer flex items-center gap-1.5 relative focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] ${
                 currentTab === 'projects' || currentTab === 'project-detail'
                   ? 'text-[#F36B21] font-extrabold'
                   : 'text-slate-700 hover:text-[#F36B21]'
@@ -380,7 +380,7 @@ export const Header: React.FC<HeaderProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => handleProjectItemClick(item.category)}
-                    className="min-h-11 w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-800 hover:bg-[#FFF3EB] hover:text-[#F36B21] transition-colors cursor-pointer block focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#F36B21]"
+                    className="min-h-11 w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-800 hover:bg-[#FFF3EB] hover:text-[#F36B21] transition-colors cursor-pointer block focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#F36B21]"
                   >
                     {item.label}
                   </button>
@@ -393,7 +393,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={() => handleTabClick('cost-estimator')}
             aria-current={currentTab === 'cost-estimator' || currentTab === 'calculator' ? 'page' : undefined}
-            className={`min-h-11 px-2 py-2 transition-colors cursor-pointer relative focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] ${
+            className={`min-h-11 px-2 py-2 transition-colors cursor-pointer relative focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] ${
               currentTab === 'cost-estimator' || currentTab === 'calculator'
                 ? 'text-[#F36B21] font-extrabold'
                 : 'text-slate-700 hover:text-[#F36B21]'
@@ -410,7 +410,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="hidden shrink-0 items-center gap-3 lg:flex lg:justify-self-end">
           {/* Phone Badge Box */}
           <div className="flex items-center gap-3 pr-2">
-            <div className="w-8 h-8 rounded-full bg-orange-50 text-[#F36B21] flex items-center justify-center border border-orange-100 shadow-sm flex-shrink-0 xl:h-9 xl:w-9">
+            <div className="w-8 h-8 rounded-full bg-orange-50 text-[#F36B21] flex items-center justify-center border border-orange-100 shadow-sm shrink-0 xl:h-9 xl:w-9">
               <PhoneCall className="w-4 h-4" />
             </div>
             <div className="text-left">
@@ -440,14 +440,14 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="lg:hidden flex items-center gap-2">
           <button
             onClick={() => onOpenQuote()}
-            className="min-h-11 sm:hidden max-[360px]:hidden inline-flex items-center gap-1 bg-[#F36B21] text-white text-xs font-bold px-3 py-2 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21]"
+            className="min-h-11 sm:hidden max-[360px]:hidden inline-flex items-center gap-1 bg-[#F36B21] text-white text-xs font-bold px-3 py-2 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21]"
           >
             Quote
           </button>
           <button
             ref={mobileMenuTriggerRef}
             onClick={() => mobileMenuOpen ? closeMobileMenu() : openMobileMenu()}
-            className="min-h-11 min-w-11 rounded-md border border-slate-300 p-2 text-slate-700 hover:text-[#F36B21] hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] cursor-pointer"
+            className="min-h-11 min-w-11 rounded-md border border-slate-300 p-2 text-slate-700 hover:text-[#F36B21] hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21] cursor-pointer"
             aria-label="Toggle navigation menu"
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-navigation-menu"
@@ -464,7 +464,7 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             aria-label="Close navigation menu"
             onClick={closeMobileMenu}
-            className="fixed inset-0 z-[55] bg-slate-950/45 backdrop-blur-sm mobile-drawer-backdrop lg:hidden"
+            className="fixed inset-0 z-55 bg-slate-950/45 backdrop-blur-sm mobile-drawer-backdrop lg:hidden"
           />
           <aside
             id="mobile-navigation-menu"
@@ -473,7 +473,7 @@ export const Header: React.FC<HeaderProps> = ({
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation"
-            className="fixed inset-y-0 right-0 z-[60] flex h-[100dvh] w-[min(88vw,420px)] max-w-full flex-col border-l border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-2xl mobile-drawer-enter lg:hidden"
+            className="fixed inset-y-0 right-0 z-60 flex h-dvh w-[min(88vw,420px)] max-w-full flex-col border-l border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-2xl mobile-drawer-enter lg:hidden"
           >
             <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-5 py-4">
               <button
@@ -503,7 +503,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="flex flex-col gap-1">
             <button
               onClick={() => handleTabClick('home')}
-              className={`min-h-11 text-left px-3 py-2.5 rounded-lg text-sm font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21] ${
+              className={`min-h-11 text-left px-3 py-2.5 rounded-lg text-sm font-bold focus-visible:outline-2 focus-visible:outline-[#F36B21] ${
                 currentTab === 'home' ? 'text-[#F36B21] bg-orange-50' : 'text-slate-800 hover:bg-slate-50'
               }`}
             >
@@ -512,7 +512,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-1">
               <button
                 onClick={() => handleTabClick('services')}
-                className={`min-h-11 flex-1 text-left px-3 py-2.5 rounded-lg text-sm font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21] ${
+                className={`min-h-11 flex-1 text-left px-3 py-2.5 rounded-lg text-sm font-bold focus-visible:outline-2 focus-visible:outline-[#F36B21] ${
                   currentTab === 'services' ? 'text-[#F36B21] bg-orange-50' : 'text-slate-800 hover:bg-slate-50'
                 }`}
               >
@@ -521,7 +521,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                className="min-h-11 min-w-11 rounded-lg p-2.5 text-slate-500 hover:bg-slate-100 hover:text-[#F36B21] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21]"
+                className="min-h-11 min-w-11 rounded-lg p-2.5 text-slate-500 hover:bg-slate-100 hover:text-[#F36B21] focus-visible:outline-2 focus-visible:outline-[#F36B21]"
                 aria-label="Toggle service links"
                 aria-expanded={mobileServicesOpen}
                 aria-controls="mobile-service-links"
@@ -535,7 +535,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <button
                     key={item.slug}
                     onClick={() => handleServiceItemClick(item.slug)}
-                    className="min-h-11 block w-full rounded-md px-3 py-2 text-left text-sm text-slate-600 hover:bg-orange-50 hover:text-[#F36B21] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21]"
+                    className="min-h-11 block w-full rounded-md px-3 py-2 text-left text-sm text-slate-600 hover:bg-orange-50 hover:text-[#F36B21] focus-visible:outline-2 focus-visible:outline-[#F36B21]"
                   >
                     {item.label}
                   </button>
@@ -547,7 +547,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setMobileCompanyOpen(!mobileCompanyOpen)}
-                className="min-h-11 flex-1 rounded-lg px-3 py-2.5 text-left text-sm font-bold text-slate-800 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21]"
+                className="min-h-11 flex-1 rounded-lg px-3 py-2.5 text-left text-sm font-bold text-slate-800 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-[#F36B21]"
                 aria-expanded={mobileCompanyOpen}
                 aria-controls="mobile-company-links"
               >
@@ -556,7 +556,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setMobileCompanyOpen(!mobileCompanyOpen)}
-                className="min-h-11 min-w-11 rounded-lg p-2.5 text-slate-500 hover:bg-slate-100 hover:text-[#F36B21] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21]"
+                className="min-h-11 min-w-11 rounded-lg p-2.5 text-slate-500 hover:bg-slate-100 hover:text-[#F36B21] focus-visible:outline-2 focus-visible:outline-[#F36B21]"
                 aria-label="Toggle company links"
                 aria-expanded={mobileCompanyOpen}
                 aria-controls="mobile-company-links"
@@ -578,7 +578,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <button
                     key={item.tab}
                     onClick={() => handleTabClick(item.tab)}
-                    className={`min-h-11 block w-full rounded-md px-3 py-2 text-left text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21] ${
+                    className={`min-h-11 block w-full rounded-md px-3 py-2 text-left text-sm focus-visible:outline-2 focus-visible:outline-[#F36B21] ${
                       currentTab === item.tab ? 'bg-orange-50 font-semibold text-[#F36B21]' : 'text-slate-600 hover:bg-orange-50 hover:text-[#F36B21]'
                     }`}
                   >
@@ -591,7 +591,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-1">
               <button
                 onClick={() => handleTabClick('projects')}
-                className={`min-h-11 flex-1 text-left px-3 py-2.5 rounded-lg text-sm font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21] ${
+                className={`min-h-11 flex-1 text-left px-3 py-2.5 rounded-lg text-sm font-bold focus-visible:outline-2 focus-visible:outline-[#F36B21] ${
                   currentTab === 'projects' ? 'text-[#F36B21] bg-orange-50' : 'text-slate-800 hover:bg-slate-50'
                 }`}
               >
@@ -600,7 +600,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setMobileProjectsOpen(!mobileProjectsOpen)}
-                className="min-h-11 min-w-11 rounded-lg p-2.5 text-slate-500 hover:bg-slate-100 hover:text-[#F36B21] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21]"
+                className="min-h-11 min-w-11 rounded-lg p-2.5 text-slate-500 hover:bg-slate-100 hover:text-[#F36B21] focus-visible:outline-2 focus-visible:outline-[#F36B21]"
                 aria-label="Toggle project links"
                 aria-expanded={mobileProjectsOpen}
                 aria-controls="mobile-project-links"
@@ -614,7 +614,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <button
                     key={item.category}
                     onClick={() => handleProjectItemClick(item.category)}
-                    className="min-h-11 block w-full rounded-md px-3 py-2 text-left text-sm text-slate-600 hover:bg-orange-50 hover:text-[#F36B21] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21]"
+                    className="min-h-11 block w-full rounded-md px-3 py-2 text-left text-sm text-slate-600 hover:bg-orange-50 hover:text-[#F36B21] focus-visible:outline-2 focus-visible:outline-[#F36B21]"
                   >
                     {item.label}
                   </button>
@@ -624,7 +624,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => handleTabClick('blog')}
-              className={`min-h-11 text-left px-3 py-2.5 rounded-lg text-sm font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21] ${
+              className={`min-h-11 text-left px-3 py-2.5 rounded-lg text-sm font-bold focus-visible:outline-2 focus-visible:outline-[#F36B21] ${
                 currentTab === 'blog' ? 'text-[#F36B21] bg-orange-50' : 'text-slate-800 hover:bg-slate-50'
               }`}
             >
@@ -635,7 +635,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex shrink-0 flex-col gap-2.5 border-t border-slate-100 bg-white px-5 py-4">
             <a
               href={`tel:${COMPANY_INFO.phoneRaw}`}
-              className="min-h-11 flex items-center justify-center gap-2 py-3 bg-slate-100 rounded-lg text-slate-800 font-bold text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F36B21]"
+              className="min-h-11 flex items-center justify-center gap-2 py-3 bg-slate-100 rounded-lg text-slate-800 font-bold text-sm focus-visible:outline-2 focus-visible:outline-[#F36B21]"
             >
               <PhoneCall className="w-4 h-4 text-[#F36B21]" />
               Call (888) 488-7767
@@ -645,7 +645,7 @@ export const Header: React.FC<HeaderProps> = ({
                 closeMobileMenu();
                 onOpenQuote();
               }}
-              className="min-h-11 w-full py-3 bg-[#F36B21] text-white font-bold rounded-lg text-sm shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21]"
+              className="min-h-11 w-full py-3 bg-[#F36B21] text-white font-bold rounded-lg text-sm shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F36B21]"
             >
               Get Quote
             </button>
@@ -653,7 +653,7 @@ export const Header: React.FC<HeaderProps> = ({
           </aside>
         </>
       )}
-      <div aria-hidden="true" className="h-[84px] shrink-0" />
+      <div aria-hidden="true" className="h-21 shrink-0" />
     </>
   );
 };
