@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
+import { existsSync } from 'node:fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { renderSeoHtml } from './src/seoPages';
+import next from 'next';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -66,6 +67,13 @@ const newsletterSubscribers: Set<string> = new Set(['homeowner@metrocity.com']);
 async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
+  const isProduction = process.argv.includes('--production')
+    || (!process.argv.includes('--dev') && process.env.NODE_ENV === 'production');
+  const nextApp = isProduction ? null : next({ dev: true, dir: __dirname });
+
+  if (nextApp) {
+    await nextApp.prepare();
+  }
 
   app.use(express.json());
 
@@ -239,48 +247,23 @@ async function startServer() {
     });
   });
 
-  const seoPaths = new Set([
-    '/', '/gutter-installation', '/gutter-repair', '/gutter-cleaning', '/gutter-guards', '/downspouts',
-    '/about', '/contact', '/free-estimate', '/locations', '/blog',
-    '/locations/texas', '/locations/florida', '/locations/california', '/locations/georgia', '/locations/north-carolina',
-    '/locations/arizona', '/locations/alabama', '/locations/tennessee', '/locations/virginia', '/locations/ohio',
-    '/locations/illinois', '/locations/colorado', '/locations/washington', '/locations/pennsylvania', '/locations/nevada',
-    '/blog/how-often-should-gutters-be-cleaned', '/blog/gutter-repair-vs-replacement', '/blog/are-gutter-guards-worth-it',
-    '/blog/seamless-gutters-vs-sectional-gutters', '/blog/why-downspouts-matter'
-  ]);
-
-  app.get('/*', (req: Request, res: Response, next) => {
-    const seoHtml = renderSeoHtml(req.path);
-    if (seoHtml && seoPaths.has(req.path.replace(/\/+$/, '') || '/')) {
-      res.type('html').status(200).send(seoHtml);
-      return;
-    }
-    next();
-  });
-
-  // Vite Integration in Dev / Static Serving in Prod
-  const isProduction = process.env.NODE_ENV === 'production';
-  if (!isProduction) {
-    const { createServer: createViteServer } = await import('vite');
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
+  if (!isProduction && nextApp) {
+    const handleNextRequest = nextApp.getRequestHandler();
+    app.all('*', (req: Request, res: Response) => {
+      handleNextRequest(req, res);
     });
-    app.use(vite.middlewares);
   } else {
-    app.use(express.static(path.resolve(__dirname, 'public')));
-    app.use(express.static(path.resolve(__dirname, 'dist')));
+    const exportDirectory = path.resolve(__dirname, 'out');
+    app.use(express.static(exportDirectory));
+    app.use((req: Request, res: Response) => {
+      const notFoundPath = path.join(exportDirectory, '404.html');
+      if (existsSync(notFoundPath)) {
+        res.status(404).sendFile(notFoundPath);
+        return;
+      }
+      res.status(404).type('text/plain').send('Not Found');
+    });
   }
-
-  app.use((req: Request, res: Response) => {
-    const seoHtml = renderSeoHtml(req.path);
-    if (seoHtml) {
-      res.type('html').status(200).send(seoHtml);
-      return;
-    }
-    const notFoundPath = path.resolve(__dirname, 'public', '404.html');
-    res.status(404).sendFile(notFoundPath);
-  });
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`ApexGutters Full-Stack Server running at http://0.0.0.0:${PORT}`);

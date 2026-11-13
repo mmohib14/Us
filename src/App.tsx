@@ -1,3 +1,5 @@
+'use client';
+
 import React, { lazy, Suspense, useState, useEffect, useRef, useMemo } from 'react';
 import { LazyMotion, domAnimation, m } from 'motion/react';
 import { PageTab, ServiceItem, ProjectItem, TeamMember, BlogPost } from './types';
@@ -86,15 +88,38 @@ import {
   UserCheck
 } from 'lucide-react';
 
-export default function App() {
-  const [currentTab, setCurrentTab] = useState<PageTab>('home');
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
-    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
+const siteUrl = 'https://www.apexgutters.com';
+
+const getInitialTab = (path: string): PageTab => {
+  if (path === '/about') return 'about';
+  if (path === '/services') return 'services';
+  if (path === '/why-us') return 'why-us';
+  if (path === '/projects') return 'projects';
+  if (path === '/team') return 'team';
+  if (path === '/cost-estimator' || path === '/calculator') return 'cost-estimator';
+  if (path === '/color-visualizer') return 'color-visualizer';
+  if (path === '/drainage-calculator') return 'drainage-calculator';
+  if (path === '/blog') return 'blog';
+  if (path === '/contact') return 'contact';
+  if (SERVICES_DATA.some((service) => `/${service.slug}` === path)) return 'service-detail';
+  if (PROJECTS_DATA.some((project) => `/${project.id}` === path)) return 'project-detail';
+  if (BLOG_POSTS.some((post) => `/${post.slug}` === path)) return 'blog-detail';
+  return 'home';
+};
+
+export default function App({ initialPath = '/' }: { initialPath?: string }) {
+  const [currentTab, setCurrentTab] = useState<PageTab>(() => getInitialTab(initialPath));
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   // Dedicated full page states
-  const [activeServicePage, setActiveServicePage] = useState<ServiceItem>(SERVICES_DATA[0]);
-  const [activeProjectPage, setActiveProjectPage] = useState<ProjectItem>(PROJECTS_DATA[0]);
-  const [activeBlogPage, setActiveBlogPage] = useState<BlogPost>(BLOG_POSTS[0]);
+  const [activeServicePage, setActiveServicePage] = useState<ServiceItem>(
+    () => SERVICES_DATA.find((service) => `/${service.slug}` === initialPath) ?? SERVICES_DATA[0]
+  );
+  const [activeProjectPage, setActiveProjectPage] = useState<ProjectItem>(
+    () => PROJECTS_DATA.find((project) => `/${project.id}` === initialPath) ?? PROJECTS_DATA[0]
+  );
+  const [activeBlogPage, setActiveBlogPage] = useState<BlogPost>(
+    () => BLOG_POSTS.find((post) => `/${post.slug}` === initialPath) ?? BLOG_POSTS[0]
+  );
   const [activeProjectFilter, setActiveProjectFilter] = useState<'all' | 'residential' | 'commercial' | 'copper' | 'protection'>('all');
 
   // Modal state for Team Bio
@@ -126,6 +151,7 @@ export default function App() {
       setPrefersReducedMotion(event.matches);
     };
 
+    setPrefersReducedMotion(motionPreference.matches);
     motionPreference.addEventListener('change', handlePreferenceChange);
     return () => motionPreference.removeEventListener('change', handlePreferenceChange);
   }, []);
@@ -344,7 +370,7 @@ export default function App() {
   };
 
   const getPathForTab = (tab: PageTab, serviceOverride?: ServiceItem, projectOverride?: ProjectItem, blogOverride?: BlogPost) => {
-    const pathname = window.location.pathname || '/';
+    const pathname = typeof window === 'undefined' ? initialPath : window.location.pathname || '/';
     const service = serviceOverride ?? activeServicePage;
     const project = projectOverride ?? activeProjectPage;
     const blog = blogOverride ?? activeBlogPage;
@@ -449,7 +475,7 @@ export default function App() {
 
   useEffect(() => {
     const syncTabFromPath = () => {
-      const path = window.location.pathname;
+      const path = window.location.pathname.replace(/\/+$/, '') || '/';
       if (path === '/about') {
         setCurrentTab('about');
         return;
@@ -505,6 +531,13 @@ export default function App() {
         return;
       }
 
+      const matchingProject = PROJECTS_DATA.find((project) => `/${project.id}` === path);
+      if (matchingProject) {
+        setActiveProjectPage(matchingProject);
+        setCurrentTab('project-detail');
+        return;
+      }
+
       setCurrentTab('home');
     };
 
@@ -536,7 +569,9 @@ export default function App() {
     };
 
     const metadata = pages[currentTab] ?? pages.home;
-    const canonicalUrl = `${window.location.origin}${window.location.pathname || '/'}`;
+    const pathname = window.location.pathname || '/';
+    const canonicalPath = pathname === '/' ? '/' : `${pathname.replace(/\/+$/, '')}/`;
+    const canonicalUrl = `${siteUrl}${canonicalPath}`;
 
     document.title = metadata.title;
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', metadata.description);
@@ -547,15 +582,17 @@ export default function App() {
   }, [currentTab, activeServicePage, activeProjectPage, activeBlogPage]);
 
   const structuredData = useMemo(() => {
+    const pathname = typeof window === 'undefined' ? initialPath : window.location.pathname || '/';
+    const currentPath = pathname === '/' ? '/' : `${pathname.replace(/\/+$/, '')}/`;
     const websiteSchema = {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: 'ApexGutters',
-      url: window.location.origin || 'https://example.com',
+      url: siteUrl,
       description: 'Gutter cleaning, repair, installation, gutter guards, and seamless gutter services for homeowners and commercial properties in the United States.',
       potentialAction: {
         '@type': 'SearchAction',
-        target: `${window.location.origin || 'https://example.com'}?q={search_term_string}`,
+        target: `${siteUrl}/?q={search_term_string}`,
         'query-input': 'required name=search_term_string'
       }
     };
@@ -564,7 +601,7 @@ export default function App() {
       '@context': 'https://schema.org',
       '@type': 'LocalBusiness',
       name: 'ApexGutters',
-      image: 'https://images.unsplash.com/photo-1628744876497-eb30460be9f6?auto=format&fit=crop&w=1000&q=80',
+      image: `${siteUrl}/images/photo-1628744876497-eb30460be9f6.jpg`,
       telephone: '18884887767',
       email: 'info@apexgutters.com',
       address: {
@@ -577,12 +614,12 @@ export default function App() {
       },
       areaServed: 'United States',
       description: 'Gutter cleaning, gutter repair, seamless gutter installation, gutter guards, and commercial gutter solutions.',
-      url: window.location.origin || 'https://example.com',
+      url: siteUrl,
       openingHours: 'Mo-Sa 07:00-18:00',
       priceRange: '$$'
     };
 
-    const baseGraph = [websiteSchema, localBusinessSchema];
+    const baseGraph: Array<Record<string, unknown>> = [websiteSchema, localBusinessSchema];
 
     if (currentTab === 'service-detail') {
       baseGraph.push({
@@ -608,9 +645,9 @@ export default function App() {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: `${window.location.origin}/` },
-          { '@type': 'ListItem', position: 2, name: 'Services', item: `${window.location.origin}/services` },
-          { '@type': 'ListItem', position: 3, name: activeServicePage.title, item: `${window.location.origin}${window.location.pathname}` }
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+          { '@type': 'ListItem', position: 2, name: 'Services', item: `${siteUrl}/services` },
+          { '@type': 'ListItem', position: 3, name: activeServicePage.title, item: `${siteUrl}${currentPath}` }
         ]
       });
     }
@@ -619,26 +656,15 @@ export default function App() {
       '@context': 'https://schema.org',
       '@graph': baseGraph
     };
-  }, [currentTab, activeServicePage]);
-
-  useEffect(() => {
-    const existingSchema = document.head.querySelector('script[data-schema="apexgutters"]');
-    if (existingSchema) existingSchema.remove();
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.setAttribute('data-schema', 'apexgutters');
-    script.text = JSON.stringify(structuredData);
-    document.head.appendChild(script);
-
-    return () => {
-      const scriptNode = document.head.querySelector('script[data-schema="apexgutters"]');
-      if (scriptNode) scriptNode.remove();
-    };
-  }, [structuredData]);
+  }, [currentTab, activeServicePage, initialPath]);
 
   return (
     <div className="min-h-screen bg-white text-slate-800 flex flex-col font-['Manrope'] selection:bg-orange-500 selection:text-white">
+      <script
+        id="apexgutters-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
+      />
       <a href="#main-content" className="skip-link">Skip to main content</a>
       {/* 1. STICKY HEADER & NAVBAR WITH IMPROVED WIDTH & HEIGHT */}
       <Header
@@ -732,7 +758,7 @@ export default function App() {
                   <div className="hero-motion-image motion-image-reveal relative">
                     <div className="hero-visual-card relative aspect-[1.22] overflow-hidden rounded-[20px] bg-slate-200 shadow-[0_24px_60px_rgba(23,26,29,0.16)]">
                       <img
-                        src="https://images.unsplash.com/photo-1628744876497-eb30460be9f6?auto=format&fit=crop&w=1000&q=80"
+                        src="/images/photo-1628744876497-eb30460be9f6.jpg"
                         alt="Bright modern living room with a fireplace and comfortable seating"
                         className="h-full w-full object-cover"
                       />
@@ -762,7 +788,7 @@ export default function App() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                   <div className="lg:col-span-6 relative">
                     <img
-                      src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
+                      src="/images/photo-1513694203232-719a280e022f.jpg"
                       alt="Home Gutter Installation"
                       className="w-full rounded-2xl shadow-lg h-95 object-cover"
                     />
@@ -1130,7 +1156,7 @@ export default function App() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                   <div className="lg:col-span-6 relative">
                     <img
-                      src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80"
+                      src="/images/photo-1621905251189-08b45d6a269e.jpg"
                       alt="Gutter Installation Technician"
                       className="rounded-2xl shadow-xl w-full h-100 object-cover"
                     />

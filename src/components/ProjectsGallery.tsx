@@ -25,9 +25,7 @@ export const ProjectsGallery: React.FC<ProjectsGalleryProps> = ({
 }) => {
   const [activeFilter, setActiveFilter] = useState<'all' | 'residential' | 'commercial' | 'copper' | 'protection'>(initialFilter);
   const [searchQuery, setSearchQuery] = useState('');
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
-    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   React.useEffect(() => {
     if (initialFilter) {
@@ -41,6 +39,7 @@ export const ProjectsGallery: React.FC<ProjectsGalleryProps> = ({
       setPrefersReducedMotion(event.matches);
     };
 
+    setPrefersReducedMotion(motionPreference.matches);
     motionPreference.addEventListener('change', handlePreferenceChange);
     return () => motionPreference.removeEventListener('change', handlePreferenceChange);
   }, []);

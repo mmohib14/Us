@@ -23,7 +23,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Seamless Gutter Installation',
     shortDesc: 'Custom-fit heavy gauge aluminum and copper seamless gutters built on-site to match your roofline, preventing leaks and structural rot.',
     fullDesc: 'Seamless gutters are custom-extruded from continuous metal coils directly on-site to match the exact linear footprint of your home. By eliminating standard sectional seams every 10 feet, we eliminate 95% of leak points and minimize debris accumulation.',
-    image: 'https://images.unsplash.com/photo-1628744876497-eb30460be9f6?auto=format&fit=crop&w=1000&q=80',
+    image: '/images/photo-1628744876497-eb30460be9f6.jpg',
     iconName: 'Wrench',
     badge: 'Popular Choice',
     benefits: [
@@ -46,7 +46,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Downspout Repair & Drainage Upgrades',
     shortDesc: 'High-capacity oversized downspout routing, underground discharge piping, and freeze-proof extensions to channel runoff far from foundations.',
     fullDesc: 'Water draining within 5 feet of your foundation saturates the soil and creates hydraulic pressure that causes foundation cracks, basement humidity, and landscape erosion. We engineer complete discharge pathways that direct roof water safely away.',
-    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1000&q=80',
+    image: '/images/photo-1504307651254-35680f356dfd.jpg',
     iconName: 'Droplets',
     badge: 'Foundation Shield',
     benefits: [
@@ -69,7 +69,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Gutter Guard & Micro-Mesh Protection',
     shortDesc: 'Medical-grade stainless steel micro-mesh guards that block pine needles, roof grit, and oak leaves while taking on torrential rainwater.',
     fullDesc: 'Our micro-mesh gutter protection systems utilize surgical-grade 316 stainless steel woven mesh bonded to heavy-gauge aluminum frames. They let 100% of rainwater filter through while shedding even tiny pine needles, pollen tassels, and shingle granules.',
-    image: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1000&q=80',
+    image: '/images/photo-1613977257363-707ba9348227.jpg',
     iconName: 'Shield',
     badge: 'Zero Clog Guarantee',
     benefits: [
@@ -92,7 +92,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Pro Gutter Cleaning & High-Pressure Flush',
     shortDesc: 'Comprehensive hand-removal of decayed organic debris, downspout flushing, hidden leak check, and complete post-service property sweep.',
     fullDesc: 'Seasonal clearing of packed leaves, sludge, and roof grit. Every cleaning includes complete downspout pressure flushing to ensure unrestricted flow, followed by a multi-point inspection of brackets, pitch, and sealants.',
-    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80',
+    image: '/images/photo-1584622650111-993a426fbf0a.jpg',
     iconName: 'Sparkles',
     badge: 'Seasonal Essential',
     benefits: [
@@ -115,7 +115,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Soffit & Fascia Board Replacement',
     shortDesc: 'Repair and replacement of water-damaged or rotted wooden fascia boards to provide a rock-solid structural anchoring substrate for gutters.',
     fullDesc: 'When gutters leak or overflow for months, wood rot develops along the fascia boards and soffit panels. We remove compromised wood, install primed rot-resistant lumber or aluminum wrapping, and create a solid structural foundation for your gutter system.',
-    image: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1000&q=80',
+    image: '/images/photo-1523217582562-09d0def993a6.jpg',
     iconName: 'Hammer',
     badge: 'Structural Defense',
     benefits: [
@@ -138,7 +138,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Commercial Box Gutters & High-Capacity Drainage',
     shortDesc: 'Engineered 7" and 8" commercial box gutters, internal drainage channels, and heavy scuppers designed for expansive multi-unit and commercial roofs.',
     fullDesc: 'Commercial and industrial buildings feature expansive roof square footages that generate enormous volumes of concentrated runoff during storms. We engineer high-capacity 7" and 8" commercial box gutter systems with oversized commercial leaderheads and scupper boxes.',
-    image: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1000&q=80',
+    image: '/images/photo-1497366811353-6870744d04b2.jpg',
     iconName: 'Building2',
     badge: 'Industrial Grade',
     benefits: [
@@ -161,7 +161,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Precision Gutter Repair & Sag Realignment',
     shortDesc: 'Re-pitching sagging troughs, resealing leaky miters, reinforcing loose brackets, and replacing dented downspout sections.',
     fullDesc: 'Standing water inside gutters indicates improper pitch slope, leading to heavy weight stresses, rotted fascia boards, and gutter separation. We re-hang gutters using heavy-duty hidden screw brackets, re-seal all corner joints with commercial tri-polymer sealant, and eliminate sag.',
-    image: 'https://images.unsplash.com/photo-1541888946425-d0fbb186c5f7?auto=format&fit=crop&w=1000&q=80',
+    image: '/images/photo-1541888946425-d0fbb186c5f7.jpg',
     iconName: 'Wrench',
     badge: 'Rapid Dispatch',
     benefits: [
@@ -193,7 +193,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: '16oz Architectural Copper',
     linearFeet: '280 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1600585154340-be6161a56a0c.jpg'
   },
   {
     id: 'proj-2',
@@ -207,7 +207,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: '0.032" Matte Black Aluminum',
     linearFeet: '340 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1600596542815-ffad4c1539a9.jpg'
   },
   {
     id: 'proj-3',
@@ -221,7 +221,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: '0.040" Industrial Aluminum',
     linearFeet: '520 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1600607687939-ce8a6c25118c.jpg'
   },
   {
     id: 'proj-4',
@@ -235,7 +235,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: '0.032" Aluminum + Micro-Mesh',
     linearFeet: '220 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1512917774080-9991f1c4c750.jpg'
   },
   {
     id: 'proj-5',
@@ -249,7 +249,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: '0.032" Dark Charcoal Aluminum',
     linearFeet: '290 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1600047509807-ba8f99d2cdde.jpg'
   },
   {
     id: 'proj-6',
@@ -263,7 +263,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: 'Commercial Gauge Steel + Guards',
     linearFeet: '460 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1497366754035-f200968a6e72.jpg'
   },
   {
     id: 'proj-7',
@@ -277,7 +277,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: '16oz Pure Copper Half-Round',
     linearFeet: '160 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1600566753190-17f0baa2a6c3.jpg'
   },
   {
     id: 'proj-8',
@@ -291,7 +291,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: '0.040" Aluminum Commercial',
     linearFeet: '650 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1486406146926-c627a92ad1ab.jpg'
   },
   {
     id: 'proj-9',
@@ -305,7 +305,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: '0.040" Heavy White Aluminum',
     linearFeet: '410 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1600607687920-4e2a09cf159d.jpg'
   },
   {
     id: 'proj-10',
@@ -319,7 +319,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: 'Micro-Mesh Shield',
     linearFeet: '240 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1513694203232-719a280e022f.jpg'
   },
   {
     id: 'proj-11',
@@ -333,7 +333,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: 'Hand-Soldered Copper',
     linearFeet: '310 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1600566753086-00f18fb6b3ea.jpg'
   },
   {
     id: 'proj-12',
@@ -347,7 +347,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: '0.032" Seamless Bronze',
     linearFeet: '1,400 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1545324418-cc1a3fa10c00.jpg'
   },
   {
     id: 'proj-13',
@@ -361,7 +361,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: 'White 0.032" Aluminum + Guards',
     linearFeet: '230 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1600585154526-990dced4db0d.jpg'
   },
   {
     id: 'proj-14',
@@ -375,7 +375,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: 'Heavy 24-Gauge Galvalume',
     linearFeet: '820 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1556761175-b413da4baf72.jpg'
   },
   {
     id: 'proj-15',
@@ -389,7 +389,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: 'Solid 16oz Copper Half-Round',
     linearFeet: '370 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1600047509807-6f2a3e1f0d3c?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1600047509807-6f2a3e1f0d3c.jpg'
   },
   {
     id: 'proj-16',
@@ -403,7 +403,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: 'Commercial Aluminum + Guards',
     linearFeet: '380 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1497366811353-6870744d04b2.jpg'
   },
   {
     id: 'proj-17',
@@ -417,7 +417,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: '0.032" Royal Brown Aluminum',
     linearFeet: '260 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1600566753190-17f0baa2a6c3.jpg'
   },
   {
     id: 'proj-18',
@@ -431,7 +431,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     material: 'Heavy Architectural Copper',
     linearFeet: '240 ft',
     year: '2026',
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1000&q=85'
+    image: '/images/photo-1497366216548-37526070297c.jpg'
   }
 ];
 
@@ -440,28 +440,28 @@ export const ABOUT_TEAM_DATA = [
     id: 'marcus-vance',
     name: 'Marcus Vance',
     role: 'Founder & CEO',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80',
+    image: '/images/photo-1560250097-0b93528c311a.jpg',
     bio: 'Founded ApexGutters with a mission to bring commercial engineering precision and zero-defect seamless roll forming to every residential property.',
   },
   {
     id: 'elena-rostova',
     name: 'Elena Rostova',
     role: 'Operations Director',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80',
+    image: '/images/photo-1573496359142-b8d87734a5a2.jpg',
     bio: 'Oversees mobile fleet logistics, material procurement, and ensures each project meets strict customer satisfaction and timeline targets.',
   },
   {
     id: 'david-miller',
     name: 'David Miller',
     role: 'Lead Installation Specialist',
-    image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=500&q=80',
+    image: '/images/photo-1622253692010-333f2da6031d.jpg',
     bio: 'Master technician with over 15 years experience calibrating laser pitch alignments and custom copper soldering on historic and luxury homes.',
   },
   {
     id: 'sarah-jenkins-mgmt',
     name: 'Sarah Jenkins',
     role: 'Customer Relations Manager',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=500&q=80',
+    image: '/images/photo-1580489944761-15a19d654956.jpg',
     bio: 'Dedicated to smooth homeowner communication, rapid quote turnarounds, and lifetime warranty service support.',
   },
 ];
@@ -473,7 +473,7 @@ export const TEAM_DATA: TeamMember[] = [
     role: 'Senior Installation Lead',
     tag: 'Certified Master Installer',
     experience: '18+ Years Experience',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=700&q=85',
+    image: '/images/photo-1560250097-0b93528c311a.jpg',
     bio: 'Robert oversees residential installation crews across the metropolitan region. With over 18 years of field leadership, he specializes in accurate slope calibration, structural fastening, and zero-defect seamless roll forming.',
     specialties: ['Laser Pitch Calibration', 'Heavy-Gauge Roll Forming', 'OSHA Safety Standards', 'Fascia Structural Repair']
   },
@@ -483,7 +483,7 @@ export const TEAM_DATA: TeamMember[] = [
     role: 'Water Flow Safety Specialist',
     tag: 'Drainage Safety Inspector',
     experience: '12+ Years Experience',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=700&q=85',
+    image: '/images/photo-1573496359142-b8d87734a5a2.jpg',
     bio: 'Sarah conducts pre-installation property drainage assessments and post-installation flow testing. Her background in civil hydrologic runoff management ensures that water from every roof is directed safely away from foundations and landscaping.',
     specialties: ['Foundation Hydrology', 'Underground PVC Routing', 'Erosion Prevention', '21-Point Inspection Auditing']
   },
@@ -493,7 +493,7 @@ export const TEAM_DATA: TeamMember[] = [
     role: 'Custom Copper Fabricator',
     tag: 'Master Metal Craftsman',
     experience: '20+ Years Experience',
-    image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=700&q=85',
+    image: '/images/photo-1622253692010-333f2da6031d.jpg',
     bio: 'David is a second-generation sheet metal artisan specializing in bespoke copper fabrication, half-round gutter profiles, custom leaderheads, and hand-soldered miter joints for historic and luxury estates.',
     specialties: ['16oz & 20oz Copper Fabrication', 'Hand-Soldered Seams', 'Ornamental Rain Chains', 'Heritage Home Preservation']
   },
@@ -503,7 +503,7 @@ export const TEAM_DATA: TeamMember[] = [
     role: 'Project Operations Supervisor',
     tag: 'Operations Director',
     experience: '14+ Years Experience',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=700&q=85',
+    image: '/images/photo-1500648767791-00dcc994a43e.jpg',
     bio: 'Michael coordinates all mobile installation trucks, logistics, and material quality assurance. He ensures projects are executed on-time, within budget, and with our strict zero-mess property cleanup protocol.',
     specialties: ['Crew Coordination', 'Material Sourcing', 'Same-Day Scheduling', 'Quality Control Inspections']
   },
@@ -513,7 +513,7 @@ export const TEAM_DATA: TeamMember[] = [
     role: 'Gutter Design & Estimating Consultant',
     tag: 'Design Specialist',
     experience: '10+ Years Experience',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=700&q=85',
+    image: '/images/photo-1580489944761-15a19d654956.jpg',
     bio: 'Emily works directly with homeowners and architects to choose gutter profiles, custom color matching, and leaf protection technology that harmonizes with architectural curb appeal while meeting peak rainfall specs.',
     specialties: ['Color Matching', 'Profile Selection', 'Itemized Transparent Estimates', 'Leaf Guard Assessment']
   },
@@ -523,7 +523,7 @@ export const TEAM_DATA: TeamMember[] = [
     role: 'Commercial Drainage Lead',
     tag: 'Commercial Specialist',
     experience: '16+ Years Experience',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=700&q=85',
+    image: '/images/photo-1506794778202-cad84cf45f1d.jpg',
     bio: 'James directs large-scale commercial, industrial, and multi-family drainage installations. He manages high-volume box gutter roll-outs, scupper spillways, and heavy commercial downspouts.',
     specialties: ['Commercial Box Gutters', 'High-Elevation Rigging', 'Stormwater Compliance', 'Industrial Scuppers']
   }
@@ -537,7 +537,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'maintenance',
     date: 'Oct 02, 2026',
     readTime: '5 min read',
-    image: 'https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?auto=format&fit=crop&w=900&q=85',
+    image: '/images/photo-1628744448840-55bdb2497bd4.jpg',
     excerpt: 'Spot overflow, sagging, loose fasteners, staining, and other warning signs before a minor gutter issue becomes severe property foundation damage.',
     content: [
       'Gutters are meant to move water away from the roof, siding, and foundation, but small issues can quickly turn into expensive property damage if left alone. The warning signs are usually subtle at first, but become highly visible during wet weather or after heavy downpours.',
@@ -562,7 +562,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'protection',
     date: 'Sep 27, 2026',
     readTime: '6 min read',
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=85',
+    image: '/images/photo-1600607687939-ce8a6c25118c.jpg',
     excerpt: 'A practical, honest look at stainless micro-mesh, foam inserts, and reverse curve systems and where each system genuinely excels.',
     content: [
       'Gutter guards are often marketed as the magic bullet to stop maintenance, but not all systems perform equally under real-world tree cover and storm conditions.',
@@ -583,7 +583,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'installation',
     date: 'Sep 20, 2026',
     readTime: '7 min read',
-    image: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=85',
+    image: '/images/photo-1600566753086-00f18fb6b3ea.jpg',
     excerpt: 'Compare appearance, leak points, fabrication, maintenance demands, and long-term lifespan before choosing your next roof drainage system.',
     content: [
       'Choosing between seamless and sectional gutters is the single most critical decision in exterior water management. The difference goes far beyond curb appeal.',
@@ -604,7 +604,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'commercial',
     date: 'Sep 13, 2026',
     readTime: '5 min read',
-    image: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=85',
+    image: '/images/photo-1497366811353-6870744d04b2.jpg',
     excerpt: 'Key considerations for high-volume storm runoff, oversized box gutters, scupper placements, and safe ground discharge in commercial properties.',
     content: [
       'Commercial roofs present unique hydrologic challenges: massive surface areas, low slopes, and high volumes of rapid runoff that can overwhelm standard residential drainage systems within minutes.',
@@ -625,7 +625,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'maintenance',
     date: 'Sep 06, 2026',
     readTime: '4 min read',
-    image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=85',
+    image: '/images/photo-1600585154526-990dced4db0d.jpg',
     excerpt: 'Use this straightforward seasonal checklist to keep rainwater moving safely and catch warning signs before the next major storm season.',
     content: [
       'Regular seasonal inspection protects rooflines, siding, and foundations from preventable water damage. Follow this seasonal checklist:',
@@ -647,7 +647,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'installation',
     date: 'Aug 29, 2026',
     readTime: '6 min read',
-    image: 'https://images.unsplash.com/photo-1600047509807-6f2a3e1f0d3c?auto=format&fit=crop&w=900&q=85',
+    image: '/images/photo-1600047509807-6f2a3e1f0d3c.jpg',
     excerpt: 'Understand the clear difference between a simple repairable bracket and an aging system that has reached the end of its functional life.',
     content: [
       'Homeowners often wonder whether a leaky gutter can be patched or if replacement is the only viable option. Here is how to evaluate:',
@@ -670,7 +670,7 @@ export const TESTIMONIALS_DATA = [
     location: 'Highland Park • Seamless 6" Aluminum',
     rating: 5,
     text: 'ApexGutters replaced our old sagging sectional gutters with custom seamless ones in less than a day. Super clean, professional, and zero leaks during the record rainstorm last week! Worth every single dollar.',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'
+    avatar: '/images/photo-1534528741775-53994a69daeb.jpg'
   },
   {
     id: 't-2',
@@ -678,7 +678,7 @@ export const TESTIMONIALS_DATA = [
     location: 'Oakridge Estates • Stainless Gutter Guards',
     rating: 5,
     text: 'The micro-mesh gutter guard system they installed saved me from climbing up on my two-story roof twice every autumn. The crew showed up exactly on time and left the yard spotless.',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80'
+    avatar: '/images/photo-1507003211169-0a1dd7228f2d.jpg'
   },
   {
     id: 't-3',
@@ -686,7 +686,7 @@ export const TESTIMONIALS_DATA = [
     location: 'Cedar Park • Full System Replacement',
     rating: 5,
     text: 'From the initial laser estimate to the final water test, ApexGutters exceeded every expectation. Honest pricing, no pushy sales gimmicks, and great communication throughout.',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80'
+    avatar: '/images/photo-1517841905240-472988babdf9.jpg'
   }
 ];
 

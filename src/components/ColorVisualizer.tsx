@@ -415,42 +415,21 @@ const ColorStrip = ({ color }: { color: GutterColor }) => (
 );
 
 export const ColorVisualizer: React.FC<ColorVisualizerProps> = ({ onSelectColorForQuote }) => {
-  const initialColor = () => {
-    const id = new URLSearchParams(window.location.search).get('finish');
-    return GUTTER_COLORS.find((color) => color.id === id) ?? GUTTER_COLORS[0];
-  };
-  const initialProfile = (): ProfileId => {
-    const value = new URLSearchParams(window.location.search).get('profile');
-    return profiles.some((item) => item.id === value) ? value as ProfileId : 'k-style';
-  };
-  const initialRoof = () => {
-    const value = new URLSearchParams(window.location.search).get('roof');
-    return roofOptions.find((item) => item.color === value)?.color ?? roofOptions[0].color;
-  };
-  const initialSiding = () => {
-    const value = new URLSearchParams(window.location.search).get('siding');
-    return sidingOptions.find((item) => item.color === value)?.color ?? sidingOptions[0].color;
-  };
-  const [selectedColor, setSelectedColor] = useState<GutterColor>(initialColor);
+  const [selectedColor, setSelectedColor] = useState<GutterColor>(GUTTER_COLORS[0]);
   const [hoverColor, setHoverColor] = useState<GutterColor | null>(null);
-  const [selectedProfile, setSelectedProfile] = useState<ProfileId>(initialProfile);
-  const [roof, setRoof] = useState(initialRoof);
-  const [siding, setSiding] = useState(initialSiding);
-  const [style, setStyle] = useState<HouseStyle>(() => {
-    const value = new URLSearchParams(window.location.search).get('style');
-    return (['Colonial', 'Ranch', 'Modern', 'Cottage'] as string[]).includes(value ?? '') ? value as HouseStyle : 'Colonial';
-  });
-  const [lighting, setLighting] = useState<LightingMode>(() => {
-    const value = new URLSearchParams(window.location.search).get('light');
-    return value === 'overcast' ? 'Overcast' : value === 'shade' || value === 'evening' ? 'Evening' : 'Sunlight';
-  });
+  const [selectedProfile, setSelectedProfile] = useState<ProfileId>('k-style');
+  const [roof, setRoof] = useState(roofOptions[0].color);
+  const [siding, setSiding] = useState(sidingOptions[0].color);
+  const [style, setStyle] = useState<HouseStyle>('Colonial');
+  const [lighting, setLighting] = useState<LightingMode>('Sunlight');
   const [matchTrim, setMatchTrim] = useState(false);
   const [swatchesReady, setSwatchesReady] = useState(false);
   const [materialFilter, setMaterialFilter] = useState<'All' | Material>('All');
   const [toneFilter, setToneFilter] = useState<'All' | Tone>('All');
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortMode>('Popularity');
-  const [favorites, setFavorites] = useState<string[]>(readFavorites);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [favoritesReady, setFavoritesReady] = useState(false);
   const [savedOnly, setSavedOnly] = useState(false);
   const [savedDrawerOpen, setSavedDrawerOpen] = useState(false);
   const [compare, setCompare] = useState<string[]>([]);
@@ -479,6 +458,28 @@ export const ColorVisualizer: React.FC<ColorVisualizerProps> = ({ onSelectColorF
 
   useEffect(() => {
     setSwatchesReady(true);
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const colorId = params.get('finish');
+    const profileId = params.get('profile');
+    const roofColor = params.get('roof');
+    const sidingColor = params.get('siding');
+    const houseStyle = params.get('style');
+    const lightMode = params.get('light');
+
+    setSelectedColor(GUTTER_COLORS.find((color) => color.id === colorId) ?? GUTTER_COLORS[0]);
+    setSelectedProfile(profiles.some((item) => item.id === profileId) ? profileId as ProfileId : 'k-style');
+    setRoof(roofOptions.find((item) => item.color === roofColor)?.color ?? roofOptions[0].color);
+    setSiding(sidingOptions.find((item) => item.color === sidingColor)?.color ?? sidingOptions[0].color);
+    setStyle((['Colonial', 'Ranch', 'Modern', 'Cottage'] as string[]).includes(houseStyle ?? '') ? houseStyle as HouseStyle : 'Colonial');
+    setLighting(lightMode === 'overcast' ? 'Overcast' : lightMode === 'shade' || lightMode === 'evening' ? 'Evening' : 'Sunlight');
+  }, []);
+
+  useEffect(() => {
+    setFavorites(readFavorites());
+    setFavoritesReady(true);
   }, []);
 
   useDialogFocus(zoomOpen, zoomDialogRef, () => setZoomOpen(false));
@@ -522,13 +523,14 @@ export const ColorVisualizer: React.FC<ColorVisualizerProps> = ({ onSelectColorF
   }, []);
 
   useEffect(() => {
+    if (!favoritesReady) return;
     try {
       localStorage.setItem('gutter-color-favorites', JSON.stringify(favorites));
     } catch (error) {
       console.warn('Could not persist saved gutter colors; keeping them for this session.', error);
       setActionMessage('Favorites are saved for this session only.');
     }
-  }, [favorites]);
+  }, [favorites, favoritesReady]);
 
   useEffect(() => () => {
     if (photo?.startsWith('blob:')) URL.revokeObjectURL(photo);

@@ -1,3 +1,5 @@
+import { COMPANY_INFO } from './data/siteData';
+
 type FaqItem = { q: string; a: string };
 
 type SeoPage = {
@@ -11,9 +13,9 @@ type SeoPage = {
   breadcrumbs?: Array<{ name: string; url: string }>;
 };
 
-const siteUrl = 'https://usaprogutter.vercel.app';
-const defaultPhone = '[ADD YOUR PHONE NUMBER]';
-const defaultEmail = '[ADD YOUR EMAIL]';
+const siteUrl = 'https://www.apexgutters.com';
+const defaultPhone = COMPANY_INFO.phone;
+const defaultEmail = COMPANY_INFO.email;
 
 const buildFaqSchema = (faqs: FaqItem[] = []) => ({
   '@context': 'https://schema.org',
@@ -35,7 +37,7 @@ const baseSchema = (page: SeoPage) => ({
       '@type': 'Organization',
       name: 'ApexGutters',
       url: siteUrl,
-      telephone: defaultPhone,
+      telephone: COMPANY_INFO.phoneRaw,
       email: defaultEmail,
       areaServed: 'United States',
       description: 'Gutter installation, repair, cleaning, gutter guards, and downspout services for homeowners and commercial properties across the USA.',
@@ -243,7 +245,7 @@ const renderFooter = () => `
       <div>
         <h4>Contact</h4>
         <ul>
-          <li><a href="tel:${defaultPhone}">Phone: ${defaultPhone}</a></li>
+          <li><a href="tel:${COMPANY_INFO.phoneRaw}">Phone: ${defaultPhone}</a></li>
           <li><a href="mailto:${defaultEmail}">Email: ${defaultEmail}</a></li>
           <li><a href="${siteUrl}/free-estimate">Free estimate</a></li>
         </ul>
@@ -281,7 +283,7 @@ const renderSectionBody = (page: SeoPage) => `
       <p class="lead">${page.intro}</p>
       <div class="action-row">
         <a class="cta-button" href="${siteUrl}/free-estimate">Get a Free Estimate</a>
-        <a class="secondary-button" href="tel:${defaultPhone}">Call ${defaultPhone}</a>
+        <a class="secondary-button" href="tel:${COMPANY_INFO.phoneRaw}">Call ${defaultPhone}</a>
       </div>
     </div>
   </section>
@@ -311,11 +313,11 @@ const renderPageHtml = (page: SeoPage, currentPath: string) => `
       <meta property="og:title" content="${page.title}" />
       <meta property="og:description" content="${page.description}" />
       <meta property="og:url" content="${siteUrl}${page.path}" />
-      <meta property="og:image" content="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80" />
+      <meta property="og:image" content="${siteUrl}/images/photo-1581578731548-c64695cc6952.jpg" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="${page.title}" />
       <meta name="twitter:description" content="${page.description}" />
-      <meta name="twitter:image" content="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80" />
+      <meta name="twitter:image" content="${siteUrl}/images/photo-1581578731548-c64695cc6952.jpg" />
       <link rel="canonical" href="${siteUrl}${page.path}" />
       <link rel="icon" type="image/svg+xml" href="${siteUrl}/favicon.svg" />
       <style>
@@ -697,4 +699,25 @@ export const renderSeoHtml = (path: string) => {
   const page = getSeoPage(path);
   if (!page) return null;
   return renderPageHtml(page, path);
+};
+
+export const getSeoPaths = () => [
+  homePage.path,
+  ...Object.values(servicePages).map((page) => page.path),
+  locationIndexPage.path,
+  ...stateProfiles.map((state) => buildStatePage(state).path),
+  blogIndexPage.path,
+  ...Object.values(blogPostDetails).map((page) => page.path),
+];
+
+export const renderSeoBodyHtml = (path: string) => {
+  const html = renderSeoHtml(path);
+  if (!html) return null;
+
+  const body = html.match(/<body>([\s\S]*?)<\/body>/i)?.[1];
+  const styles = html.match(/<style>([\s\S]*?)<\/style>/i)?.[1];
+  if (!body || !styles) {
+    throw new Error(`Unable to extract the generated SEO page body for ${path}.`);
+  }
+  return `<style>${styles}</style>${body}`;
 };

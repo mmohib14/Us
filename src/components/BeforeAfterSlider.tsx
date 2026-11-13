@@ -20,8 +20,8 @@ const TRANSFORMATIONS: BeforeAfterItem[] = [
     title: 'Severe Miter Separation & Sag to 6" Seamless Aluminum',
     category: 'Full Replacement',
     location: 'Westchester County, NY',
-    beforeImg: 'https://images.unsplash.com/photo-1541888946425-d0fbb186c5f7?auto=format&fit=crop&w=1000&q=80',
-    afterImg: 'https://images.unsplash.com/photo-1628744876497-eb30460be9f6?auto=format&fit=crop&w=1000&q=80',
+    beforeImg: '/images/photo-1541888946425-d0fbb186c5f7.jpg',
+    afterImg: '/images/photo-1628744876497-eb30460be9f6.jpg',
     beforeNotes: 'Sectional 5" gutters with rusted seams every 10ft, rotting cedar fascia, and standing water low-spots.',
     afterNotes: 'Continuous 0.032" seamless heavy aluminum roll-formed on-site, primed PVC fascia board, and hidden screw brackets every 24".',
     improvementStats: ['100% Leak Points Eliminated', '3.5x Load Carrying Capacity', 'Zero Standing Water Evacuation']
@@ -31,8 +31,8 @@ const TRANSFORMATIONS: BeforeAfterItem[] = [
     title: 'Clogged Shingle Grit & Pine Needles to Micro-Mesh Defense',
     category: 'Gutter Guards',
     location: 'Bergen County, NJ',
-    beforeImg: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80',
-    afterImg: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1000&q=80',
+    beforeImg: '/images/photo-1584622650111-993a426fbf0a.jpg',
+    afterImg: '/images/photo-1613977257363-707ba9348227.jpg',
     beforeNotes: 'Heavy pine needle damming causing roofline water overflow into basement windows and landscape trenching.',
     afterNotes: '316 marine-grade stainless steel micro-mesh guards fitted on reinforced brackets, shedding 100% of pine needles and seed pods.',
     improvementStats: ['Never Clean Gutters Again', 'Handles 150+ In/Hr Torrential Rain', 'Lifetime No-Clog Guarantee']
@@ -42,8 +42,8 @@ const TRANSFORMATIONS: BeforeAfterItem[] = [
     title: 'Modern Portico to Architectural Hand-Soldered Copper',
     category: 'Architectural Copper',
     location: 'Highland Hills Estate',
-    beforeImg: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1000&q=80',
-    afterImg: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80',
+    beforeImg: '/images/photo-1513694203232-719a280e022f.jpg',
+    afterImg: '/images/photo-1600585154340-be6161a56a0c.jpg',
     beforeNotes: 'Faded peeling plastic vinyl gutters detracting from stone masonry entryway and leaking at seams.',
     afterNotes: '16oz heavy architectural copper half-round gutters with solid brass decorative brackets and Japanese link rain chains.',
     improvementStats: ['80-100 Year Material Lifespan', 'Hand-Crafted Soldered Miters', 'Stunning Natural Living Patina']

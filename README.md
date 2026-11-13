@@ -1,20 +1,12 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# ApexGutters
 
-# Run and deploy your AI Studio app
+The site uses Next.js with static export. Public routes are generated as HTML during the build, while the Express server continues to provide the quote, inspection, calculator, and newsletter APIs.
 
-This contains everything you need to run your app locally.
+## Run locally
 
-View your app in AI Studio: https://ai.studio/apps/7ecebc06-ebe2-49b5-93c2-933d01eba54b
+1. Install dependencies with `npm install`.
+2. Start the Next.js development server and API with `npm run dev`.
+3. Generate the static site with `npm run build`; the exported pages are written to `out/`.
+4. Serve the export and API with `npm start` after building.
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+The configured canonical domain is `https://www.apexgutters.com`.
