@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useDialogFocus } from '../hooks/useDialogFocus';
 import {
   ArrowRight,
@@ -415,6 +416,7 @@ const ColorStrip = ({ color }: { color: GutterColor }) => (
 );
 
 export const ColorVisualizer: React.FC<ColorVisualizerProps> = ({ onSelectColorForQuote }) => {
+  const searchParams = useSearchParams();
   const [selectedColor, setSelectedColor] = useState<GutterColor>(GUTTER_COLORS[0]);
   const [hoverColor, setHoverColor] = useState<GutterColor | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<ProfileId>('k-style');
@@ -449,6 +451,7 @@ export const ColorVisualizer: React.FC<ColorVisualizerProps> = ({ onSelectColorF
   const [compareSlider, setCompareSlider] = useState(50);
   const [showCompareSlider, setShowCompareSlider] = useState(false);
   const [showStickyCta, setShowStickyCta] = useState(false);
+  const [queryInitialized, setQueryInitialized] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const swatchRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -461,13 +464,12 @@ export const ColorVisualizer: React.FC<ColorVisualizerProps> = ({ onSelectColorF
   }, []);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const colorId = params.get('finish');
-    const profileId = params.get('profile');
-    const roofColor = params.get('roof');
-    const sidingColor = params.get('siding');
-    const houseStyle = params.get('style');
-    const lightMode = params.get('light');
+    const colorId = searchParams.get('finish');
+    const profileId = searchParams.get('profile');
+    const roofColor = searchParams.get('roof');
+    const sidingColor = searchParams.get('siding');
+    const houseStyle = searchParams.get('style');
+    const lightMode = searchParams.get('light');
 
     setSelectedColor(GUTTER_COLORS.find((color) => color.id === colorId) ?? GUTTER_COLORS[0]);
     setSelectedProfile(profiles.some((item) => item.id === profileId) ? profileId as ProfileId : 'k-style');
@@ -475,7 +477,8 @@ export const ColorVisualizer: React.FC<ColorVisualizerProps> = ({ onSelectColorF
     setSiding(sidingOptions.find((item) => item.color === sidingColor)?.color ?? sidingOptions[0].color);
     setStyle((['Colonial', 'Ranch', 'Modern', 'Cottage'] as string[]).includes(houseStyle ?? '') ? houseStyle as HouseStyle : 'Colonial');
     setLighting(lightMode === 'overcast' ? 'Overcast' : lightMode === 'shade' || lightMode === 'evening' ? 'Evening' : 'Sunlight');
-  }, []);
+    setQueryInitialized(true);
+  }, [searchParams]);
 
   useEffect(() => {
     setFavorites(readFavorites());
@@ -500,6 +503,7 @@ export const ColorVisualizer: React.FC<ColorVisualizerProps> = ({ onSelectColorF
   const recommendedTone: Tone = Math.min(luminanceOf(roof), luminanceOf(siding)) < 0.25 ? 'Light' : 'Dark';
 
   useEffect(() => {
+    if (!queryInitialized) return;
     const url = new URL(window.location.href);
     url.searchParams.set('finish', selectedColor.id);
     url.searchParams.set('profile', selectedProfile);
@@ -508,7 +512,7 @@ export const ColorVisualizer: React.FC<ColorVisualizerProps> = ({ onSelectColorF
     url.searchParams.set('style', style);
     url.searchParams.set('light', lighting === 'Sunlight' ? 'sun' : lighting === 'Overcast' ? 'overcast' : 'evening');
     window.history.replaceState({}, '', url);
-  }, [selectedColor, selectedProfile, roof, siding, style, lighting]);
+  }, [queryInitialized, selectedColor, selectedProfile, roof, siding, style, lighting]);
 
   useEffect(() => {
     const section = sectionRef.current;

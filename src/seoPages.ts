@@ -1,4 +1,5 @@
 import { COMPANY_INFO } from './data/siteData';
+import { SITE_URL, SOCIAL_IMAGE_PATH } from './site-config';
 
 type FaqItem = { q: string; a: string };
 
@@ -13,7 +14,7 @@ type SeoPage = {
   breadcrumbs?: Array<{ name: string; url: string }>;
 };
 
-const siteUrl = 'https://www.apexgutters.com';
+const siteUrl = SITE_URL;
 const defaultPhone = COMPANY_INFO.phone;
 const defaultEmail = COMPANY_INFO.email;
 
@@ -37,21 +38,12 @@ const baseSchema = (page: SeoPage) => ({
       '@type': 'Organization',
       name: 'ApexGutters',
       url: siteUrl,
-      telephone: COMPANY_INFO.phoneRaw,
-      email: defaultEmail,
-      areaServed: 'United States',
-      description: 'Gutter installation, repair, cleaning, gutter guards, and downspout services for homeowners and commercial properties across the USA.',
     },
     {
       '@type': 'WebSite',
       name: 'ApexGutters',
       url: siteUrl,
       description: page.description,
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: `${siteUrl}/?q={search_term_string}`,
-        'query-input': 'required name=search_term_string',
-      },
     },
     {
       '@type': 'BreadcrumbList',
@@ -62,6 +54,19 @@ const baseSchema = (page: SeoPage) => ({
         item: `${siteUrl}${crumb.url}`,
       })),
     },
+    ...(['/gutter-installation', '/gutter-repair', '/gutter-cleaning', '/gutter-guards', '/downspouts'].includes(page.path)
+      ? [{
+          '@type': 'Service',
+          name: page.title,
+          description: page.description,
+          provider: {
+            '@type': 'Organization',
+            name: 'ApexGutters',
+            url: siteUrl,
+          },
+          url: `${siteUrl}${page.path}`,
+        }]
+      : []),
   ],
 });
 
@@ -312,13 +317,13 @@ const renderPageHtml = (page: SeoPage, currentPath: string) => `
       <meta property="og:type" content="website" />
       <meta property="og:title" content="${page.title}" />
       <meta property="og:description" content="${page.description}" />
-      <meta property="og:url" content="${siteUrl}${page.path}" />
-      <meta property="og:image" content="${siteUrl}/images/photo-1581578731548-c64695cc6952.jpg" />
+      <meta property="og:url" content="${siteUrl}${page.path === '/' ? '/' : `${page.path}/`}" />
+      <meta property="og:image" content="${siteUrl}${SOCIAL_IMAGE_PATH}" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="${page.title}" />
       <meta name="twitter:description" content="${page.description}" />
-      <meta name="twitter:image" content="${siteUrl}/images/photo-1581578731548-c64695cc6952.jpg" />
-      <link rel="canonical" href="${siteUrl}${page.path}" />
+      <meta name="twitter:image" content="${siteUrl}${SOCIAL_IMAGE_PATH}" />
+      <link rel="canonical" href="${siteUrl}${page.path === '/' ? '/' : `${page.path}/`}" />
       <link rel="icon" type="image/svg+xml" href="${siteUrl}/favicon.svg" />
       <style>
         :root {
@@ -683,9 +688,9 @@ export const getSeoPage = (path: string): SeoPage | undefined => {
     if (state) return buildStatePage(state);
   }
   if (normalized.startsWith('/blog/')) {
-    const blogPath = normalized as keyof typeof blogPostDetails;
-    if (blogPostDetails[blogPath as keyof typeof blogPostDetails]) {
-      const blogPage = blogPostDetails[blogPath as keyof typeof blogPostDetails];
+    const blogSlug = normalized.slice('/blog/'.length) as keyof typeof blogPostDetails;
+    if (blogPostDetails[blogSlug]) {
+      const blogPage = blogPostDetails[blogSlug];
       return {
         ...blogPage,
         breadcrumbs: [{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog' }, { name: blogPage.title, url: normalized }],

@@ -9,4 +9,6 @@ The site uses Next.js with static export. Public routes are generated as HTML du
 3. Generate the static site with `npm run build`; the exported pages are written to `out/`.
 4. Serve the export and API with `npm start` after building.
 
-The configured canonical domain is `https://www.apexgutters.com`.
+Set `NEXT_PUBLIC_SITE_URL` in the local environment and Vercel project settings. Use
+`https://usaprogutter.vercel.app` until the custom domain is connected, then update the
+variable to the custom origin and redeploy.

@@ -2,12 +2,10 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import 'animate.css';
 import '../src/index.css';
-
-const siteUrl = 'https://www.apexgutters.com';
-const socialImage = `${siteUrl}/images/photo-1581578731548-c64695cc6952.jpg`;
+import { SITE_URL, SOCIAL_IMAGE_PATH, SOCIAL_IMAGE_URL } from '../src/site-config';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: 'Gutter Cleaning, Repair & Installation | ApexGutters',
   description:
     'Professional gutter cleaning, repair, installation, gutter guards, and seamless gutter services for homeowners and commercial properties.',
@@ -20,12 +18,15 @@ export const metadata: Metadata = {
     title: 'Gutter Cleaning, Repair & Installation | ApexGutters',
     description:
       'Professional gutter cleaning, repair, installation, gutter guards, and seamless gutter services for homeowners and commercial properties.',
-    url: siteUrl,
-    images: [{ url: socialImage, width: 1200, height: 630, alt: 'ApexGutters service team' }],
+    url: SITE_URL,
+    images: [{ url: SOCIAL_IMAGE_PATH, width: 1200, height: 630, alt: 'Gutter installation and drainage services' }],
   },
   twitter: {
     card: 'summary_large_image',
-    images: [{ url: socialImage, alt: 'ApexGutters service team' }],
+    title: 'Gutter Cleaning, Repair & Installation | ApexGutters',
+    description:
+      'Professional gutter cleaning, repair, installation, gutter guards, and seamless gutter services for homeowners and commercial properties.',
+    images: [{ url: SOCIAL_IMAGE_URL, alt: 'Gutter installation and drainage services' }],
   },
 };
 

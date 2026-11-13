@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import App from '../../src/App';
 import { BLOG_POSTS, PROJECTS_DATA, SERVICES_DATA } from '../../src/data/siteData';
-import { getSeoPage, getSeoPaths, renderSeoBodyHtml } from '../../src/seoPages';
+import { getSeoPage, renderSeoBodyHtml } from '../../src/seoPages';
+import { SITE_PATHS } from '../../src/site-routes';
+import { SITE_URL, SOCIAL_IMAGE_PATH, SOCIAL_IMAGE_URL } from '../../src/site-config';
+import { getStructuredData } from '../../src/structuredData';
 
-const siteUrl = 'https://www.apexgutters.com';
-const socialImage = `${siteUrl}/images/photo-1581578731548-c64695cc6952.jpg`;
-
-const appPaths = [
+const appPaths = new Set([
   '/',
   '/about',
   '/services',
@@ -22,15 +22,12 @@ const appPaths = [
   ...SERVICES_DATA.map((service) => `/${service.slug}`),
   ...PROJECTS_DATA.map((project) => `/${project.id}`),
   ...BLOG_POSTS.map((post) => `/${post.slug}`),
-];
-
-const interactivePaths = new Set(appPaths);
-const allPaths = [...new Set([...getSeoPaths(), ...appPaths])];
+]);
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return allPaths.map((path) => ({
+  return SITE_PATHS.filter((path) => path !== '/site-map').map((path) => ({
     slug: path === '/' ? [] : path.slice(1).split('/'),
   }));
 }
@@ -41,7 +38,7 @@ function getPath(slug?: string[]) {
 
 function getMetadata(path: string) {
   const seoPage = getSeoPage(path);
-  if (seoPage && !interactivePaths.has(path)) {
+  if (seoPage && !appPaths.has(path)) {
     return { title: seoPage.title, description: seoPage.description };
   }
 
@@ -98,7 +95,7 @@ function getMetadata(path: string) {
       description: 'Estimate gutter project costs based on linear footage, materials, stories, and leaf guard options.',
     },
     '/calculator': {
-      title: 'Gutter Cost Calculator | ApexGutters',
+      title: 'Gutter Project Estimator | ApexGutters',
       description: 'Estimate gutter project costs based on linear footage, materials, stories, and leaf guard options.',
     },
     '/color-visualizer': {
@@ -124,7 +121,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const path = getPath((await params).slug);
   const page = getMetadata(path);
-  const canonicalUrl = `${siteUrl}${path === '/' ? '/' : `${path}/`}`;
+  const canonicalUrl = `${SITE_URL}${path === '/' ? '/' : `${path}/`}`;
 
   return {
     title: page.title,
@@ -136,13 +133,13 @@ export async function generateMetadata({
       title: page.title,
       description: page.description,
       url: canonicalUrl,
-      images: [{ url: socialImage, width: 1200, height: 630, alt: 'ApexGutters service team' }],
+      images: [{ url: SOCIAL_IMAGE_PATH, width: 1200, height: 630, alt: 'Gutter installation and drainage services' }],
     },
     twitter: {
       card: 'summary_large_image',
       title: page.title,
       description: page.description,
-      images: [{ url: socialImage, alt: 'ApexGutters service team' }],
+      images: [{ url: SOCIAL_IMAGE_URL, alt: 'Gutter installation and drainage services' }],
     },
   };
 }
@@ -153,13 +150,30 @@ export default async function Page({
   params: Promise<{ slug?: string[] }>;
 }) {
   const path = getPath((await params).slug);
+  const structuredData = getStructuredData(path);
 
-  if (!interactivePaths.has(path)) {
+  if (!appPaths.has(path)) {
     const body = renderSeoBodyHtml(path);
     if (body) {
-      return <div dangerouslySetInnerHTML={{ __html: body }} />;
+      return (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
+          />
+          <div dangerouslySetInnerHTML={{ __html: body }} />
+        </>
+      );
     }
   }
 
-  return <App initialPath={path} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
+      />
+      <App initialPath={path} />
+    </>
+  );
 }

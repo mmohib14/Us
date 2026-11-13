@@ -284,6 +284,7 @@ export const Footer: React.FC<FooterProps> = ({
             <nav aria-label="Legal links" className="apex-footer__legal-links">
               <a href="/contact" aria-label="Contact the gutter company">Contact</a>
               <a href="/services" aria-label="View services">Services</a>
+              <a href="/site-map/" aria-label="Browse all website pages">All pages</a>
               <a href="/sitemap.xml" aria-label="Sitemap">Sitemap</a>
             </nav>
           </div>

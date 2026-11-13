@@ -26,6 +26,7 @@ import { BeforeAfterSlider } from './components/BeforeAfterSlider';
 import { ServiceAreaChecker } from './components/ServiceAreaChecker';
 import { FAQSection } from './components/FAQSection';
 import { useDialogFocus } from './hooks/useDialogFocus';
+import { SITE_URL } from './site-config';
 
 const CostCalculator = lazy(() =>
   import('./components/CostCalculator').then(({ CostCalculator: component }) => ({ default: component }))
@@ -87,8 +88,6 @@ import {
   Send,
   UserCheck
 } from 'lucide-react';
-
-const siteUrl = 'https://www.apexgutters.com';
 
 const getInitialTab = (path: string): PageTab => {
   if (path === '/about') return 'about';
@@ -163,138 +162,6 @@ export default function App({ initialPath = '/' }: { initialPath?: string }) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    const main = document.querySelector('main');
-    if (!main || prefersReducedMotion || !('IntersectionObserver' in window)) return;
-
-    const observer = new IntersectionObserver((entries, currentObserver) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.setAttribute('data-motion-visible', 'true');
-        currentObserver.unobserve(entry.target);
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-
-    const prepareReveal = (element: Element, index: number, animateImmediately = false) => {
-      if (element.getAttribute('data-motion-ready') !== 'true') {
-        element.setAttribute('data-motion-ready', 'true');
-        element.classList.add('motion-reveal');
-        if (element instanceof HTMLElement) {
-          element.style.setProperty('--motion-delay', `${Math.min(index, 4) * 90}ms`);
-        }
-        if (element.classList.contains('group') || element.classList.contains('card-hover')) {
-          element.setAttribute('data-motion-card', 'true');
-        }
-      }
-
-      if (animateImmediately) {
-        if (element.getAttribute('data-motion-visible') !== 'true') {
-          if (document.visibilityState === 'visible') {
-            requestAnimationFrame(() => requestAnimationFrame(() => {
-              element.setAttribute('data-motion-visible', 'true');
-            }));
-          } else {
-            observer.observe(element);
-          }
-        }
-      } else if (element.getAttribute('data-motion-visible') !== 'true') {
-        try {
-          observer.observe(element);
-        } catch (error) {
-          console.error('Unable to observe a motion target; revealing it immediately.', error);
-          element.setAttribute('data-motion-visible', 'true');
-        }
-      }
-    };
-
-    const prepareMotion = () => {
-      main.querySelectorAll('section').forEach((section) => {
-        const wrapper = section.firstElementChild;
-        if (!wrapper) return;
-
-        if (section.classList.contains('hero-motion')) {
-          const heroItems = section.querySelectorAll('.hero-motion-copy > *, .hero-motion-image');
-          heroItems.forEach((item, index) => {
-            prepareReveal(item, index, true);
-            if (item.classList.contains('hero-motion-image')) {
-              item.setAttribute('data-motion-image', 'true');
-            }
-          });
-          return;
-        }
-
-        const targets: Element[] = [];
-        Array.from(wrapper.children).forEach((child) => {
-          if (child.classList.contains('grid')) {
-            targets.push(...Array.from(child.children));
-          } else if (
-            child.classList.contains('text-center') ||
-            child.querySelector(':scope > h1, :scope > h2, :scope > h3')
-          ) {
-            targets.push(child);
-          }
-        });
-
-        targets.forEach((target, index) => prepareReveal(target, index));
-      });
-
-      const footerColumns = document.querySelector('footer > div > .grid')?.children;
-      if (footerColumns) {
-        Array.from(footerColumns).forEach((column, index) => prepareReveal(column, index));
-      }
-    };
-
-    prepareMotion();
-    let fallbackFrame = 0;
-    const isInMotionViewport = (element: Element) => {
-      const rect = element.getBoundingClientRect();
-      const visibleWidth = Math.max(0, Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0));
-      const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight * 0.94) - Math.max(rect.top, 0));
-      const area = rect.width * rect.height;
-      return area > 0 && visibleWidth * visibleHeight >= area * 0.12;
-    };
-    const revealTargetsInViewport = (includeHero = false) => {
-      main.querySelectorAll('.motion-reveal[data-motion-ready="true"]:not([data-motion-visible="true"])')
-        .forEach((element) => {
-          if ((includeHero || !element.closest('.hero-motion')) && isInMotionViewport(element)) {
-            element.setAttribute('data-motion-visible', 'true');
-          }
-        });
-    };
-    const revealVisibleTargets = (includeHero = false) => {
-      if (fallbackFrame) return;
-      fallbackFrame = requestAnimationFrame(() => {
-        fallbackFrame = 0;
-        revealTargetsInViewport(includeHero);
-      });
-    };
-    const handleVisibilityChange = () => {
-      if (document.visibilityState !== 'visible') return;
-      main.querySelectorAll('.hero-motion .motion-reveal[data-motion-ready="true"]:not([data-motion-visible="true"])')
-        .forEach((element) => {
-          if (isInMotionViewport(element)) element.setAttribute('data-motion-visible', 'true');
-        });
-      revealTargetsInViewport(true);
-    };
-    const handleViewportMotionChange = () => revealVisibleTargets(true);
-    window.addEventListener('scroll', handleViewportMotionChange, { passive: true });
-    window.addEventListener('resize', handleViewportMotionChange);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    revealVisibleTargets();
-
-    const mutationObserver = new MutationObserver(prepareMotion);
-    mutationObserver.observe(main, { childList: true, subtree: true });
-
-    return () => {
-      mutationObserver.disconnect();
-      observer.disconnect();
-      window.removeEventListener('scroll', handleViewportMotionChange);
-      window.removeEventListener('resize', handleViewportMotionChange);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      if (fallbackFrame) cancelAnimationFrame(fallbackFrame);
-    };
-  }, [currentTab, prefersReducedMotion]);
 
   useEffect(() => {
     const counters = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
@@ -559,7 +426,7 @@ export default function App({ initialPath = '/' }: { initialPath?: string }) {
       projects: { title: 'Gutter Installation Projects | ApexGutters', description: 'Browse recent residential and commercial gutter installation and protection work completed by ApexGutters.' },
       'project-detail': { title: `${activeProjectPage.title} | ApexGutters Projects`, description: activeProjectPage.shortDesc },
       team: { title: 'Our Gutter Specialists | ApexGutters', description: 'Meet the ApexGutters team focused on gutter installation, repair, drainage, and water management.' },
-      calculator: { title: 'Gutter Cost Calculator | ApexGutters', description: 'Estimate gutter project costs based on linear footage, materials, stories, and leaf guard options.' },
+      calculator: { title: 'Gutter Project Estimator | ApexGutters', description: 'Estimate gutter project costs based on linear footage, materials, stories, and leaf guard options.' },
       'cost-estimator': { title: 'Gutter Cost Calculator | ApexGutters', description: 'Estimate gutter project costs based on linear footage, materials, stories, and leaf guard options.' },
       'color-visualizer': { title: 'Gutter Colors & Finishes | ApexGutters', description: 'Compare gutter finishes and visualize colors for seamless aluminum, copper, and contemporary gutter systems.' },
       'drainage-calculator': { title: 'Rainwater & Gutter Sizing Calculator | ApexGutters', description: 'Estimate roof runoff and gutter sizing recommendations for efficient drainage and downspout performance.' },
@@ -571,7 +438,7 @@ export default function App({ initialPath = '/' }: { initialPath?: string }) {
     const metadata = pages[currentTab] ?? pages.home;
     const pathname = window.location.pathname || '/';
     const canonicalPath = pathname === '/' ? '/' : `${pathname.replace(/\/+$/, '')}/`;
-    const canonicalUrl = `${siteUrl}${canonicalPath}`;
+    const canonicalUrl = `${SITE_URL}${canonicalPath}`;
 
     document.title = metadata.title;
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', metadata.description);
@@ -581,90 +448,8 @@ export default function App({ initialPath = '/' }: { initialPath?: string }) {
     document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
   }, [currentTab, activeServicePage, activeProjectPage, activeBlogPage]);
 
-  const structuredData = useMemo(() => {
-    const pathname = typeof window === 'undefined' ? initialPath : window.location.pathname || '/';
-    const currentPath = pathname === '/' ? '/' : `${pathname.replace(/\/+$/, '')}/`;
-    const websiteSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: 'ApexGutters',
-      url: siteUrl,
-      description: 'Gutter cleaning, repair, installation, gutter guards, and seamless gutter services for homeowners and commercial properties in the United States.',
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: `${siteUrl}/?q={search_term_string}`,
-        'query-input': 'required name=search_term_string'
-      }
-    };
-
-    const localBusinessSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'LocalBusiness',
-      name: 'ApexGutters',
-      image: `${siteUrl}/images/photo-1628744876497-eb30460be9f6.jpg`,
-      telephone: '18884887767',
-      email: 'info@apexgutters.com',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: '1248 Skyline Blvd',
-        addressLocality: 'Metro City',
-        addressRegion: 'NY',
-        postalCode: '10001',
-        addressCountry: 'US'
-      },
-      areaServed: 'United States',
-      description: 'Gutter cleaning, gutter repair, seamless gutter installation, gutter guards, and commercial gutter solutions.',
-      url: siteUrl,
-      openingHours: 'Mo-Sa 07:00-18:00',
-      priceRange: '$$'
-    };
-
-    const baseGraph: Array<Record<string, unknown>> = [websiteSchema, localBusinessSchema];
-
-    if (currentTab === 'service-detail') {
-      baseGraph.push({
-        '@context': 'https://schema.org',
-        '@type': 'Service',
-        name: activeServicePage.title,
-        serviceType: activeServicePage.title,
-        description: activeServicePage.shortDesc,
-        provider: {
-          '@type': 'LocalBusiness',
-          name: 'ApexGutters'
-        },
-        areaServed: 'United States',
-        offers: {
-          '@type': 'Offer',
-          availability: 'https://schema.org/InStock',
-          priceCurrency: 'USD',
-          description: 'Quote-based gutter service pricing. Final cost depends on project scope, material, and access.'
-        }
-      });
-
-      baseGraph.push({
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
-          { '@type': 'ListItem', position: 2, name: 'Services', item: `${siteUrl}/services` },
-          { '@type': 'ListItem', position: 3, name: activeServicePage.title, item: `${siteUrl}${currentPath}` }
-        ]
-      });
-    }
-
-    return {
-      '@context': 'https://schema.org',
-      '@graph': baseGraph
-    };
-  }, [currentTab, activeServicePage, initialPath]);
-
   return (
     <div className="min-h-screen bg-white text-slate-800 flex flex-col font-['Manrope'] selection:bg-orange-500 selection:text-white">
-      <script
-        id="apexgutters-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }}
-      />
       <a href="#main-content" className="skip-link">Skip to main content</a>
       {/* 1. STICKY HEADER & NAVBAR WITH IMPROVED WIDTH & HEIGHT */}
       <Header

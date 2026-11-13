@@ -161,7 +161,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Precision Gutter Repair & Sag Realignment',
     shortDesc: 'Re-pitching sagging troughs, resealing leaky miters, reinforcing loose brackets, and replacing dented downspout sections.',
     fullDesc: 'Standing water inside gutters indicates improper pitch slope, leading to heavy weight stresses, rotted fascia boards, and gutter separation. We re-hang gutters using heavy-duty hidden screw brackets, re-seal all corner joints with commercial tri-polymer sealant, and eliminate sag.',
-    image: '/images/photo-1541888946425-d0fbb186c5f7.jpg',
+    image: '/images/photo-1504307651254-35680f356dfd.jpg',
     iconName: 'Wrench',
     badge: 'Rapid Dispatch',
     benefits: [

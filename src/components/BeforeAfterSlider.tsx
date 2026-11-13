@@ -20,8 +20,8 @@ const TRANSFORMATIONS: BeforeAfterItem[] = [
     title: 'Severe Miter Separation & Sag to 6" Seamless Aluminum',
     category: 'Full Replacement',
     location: 'Westchester County, NY',
-    beforeImg: '/images/photo-1541888946425-d0fbb186c5f7.jpg',
-    afterImg: '/images/photo-1628744876497-eb30460be9f6.jpg',
+    beforeImg: '/images/photo-1600596542815-ffad4c1539a9.jpg',
+    afterImg: '/images/photo-1628744448840-55bdb2497bd4.jpg',
     beforeNotes: 'Sectional 5" gutters with rusted seams every 10ft, rotting cedar fascia, and standing water low-spots.',
     afterNotes: 'Continuous 0.032" seamless heavy aluminum roll-formed on-site, primed PVC fascia board, and hidden screw brackets every 24".',
     improvementStats: ['100% Leak Points Eliminated', '3.5x Load Carrying Capacity', 'Zero Standing Water Evacuation']
